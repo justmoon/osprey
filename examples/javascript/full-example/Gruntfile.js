@@ -25,6 +25,15 @@ module.exports = function(grunt) {
       }
     },
 
+    mochaTest: {
+      test: {
+        options: {
+          reporter: 'spec',
+        },
+        src: ['test/**/*.js']
+      }
+    },
+
     watch: {
       express: {
         files: ['src/**/*.js', 'src/assets/raml/**/*.*'],
@@ -40,4 +49,5 @@ module.exports = function(grunt) {
   require('load-grunt-tasks')(grunt);
 
   grunt.registerTask('default', ['watch']);
+  grunt.registerTask('test', ['mochaTest']);
 };

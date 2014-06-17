@@ -1,7 +1,7 @@
 var express = require('express');
 var path    = require('path');
 var osprey  = require('osprey');
-var app     = module.exports = express();
+var app     = express();
 var db      = { teams: [], fixture: [] };
 
 app.use(express.json());
@@ -9,10 +9,11 @@ app.use(express.urlencoded());
 app.use(express.logger('dev'));
 app.set('port', process.env.PORT || 3000);
 
-var api = osprey.create('/api', app, {
+var api = module.exports = osprey.create('/api', app, {
   ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
   logLevel: 'debug',
-  enableMocks: true
+  enableMocks: false,
+  enableConsole: false
 });
 
 api.describe(function (api) {
