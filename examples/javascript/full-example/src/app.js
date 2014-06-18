@@ -2,7 +2,7 @@ var express = require('express');
 var path    = require('path');
 var osprey  = require('osprey');
 var app     = module.exports = express();
-var db      = { teams: require('./data/teams.json').teams, fixture: require('./data/fixture.json').fixture };
+var db      = require('./data/sample.json');
 
 app.use(express.json());
 app.use(express.urlencoded());
