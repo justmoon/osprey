@@ -8,12 +8,9 @@ module.exports = function (api, db) {
       res.send(404);
     }
 
-    res.send(_.map(result, function (el) {
-      delete el.homeTeamScore;
-      delete el.awayTeamScore;
-
-      return el;
-    }));
+    res.send({
+      fixture: result
+    });
   });
 
   api.get('/fixture/:homeTeamId/:awayTeamId', function (req, res) {
@@ -27,7 +24,7 @@ module.exports = function (api, db) {
       return;
     }
 
-    res.send(db.fixture);
+    res.send(result);
   });
 
   api.put('/fixture/:homeTeamId/:awayTeamId', function (req, res) {

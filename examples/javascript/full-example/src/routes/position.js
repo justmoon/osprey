@@ -14,8 +14,10 @@ module.exports = function (api, db) {
         result[match.awayTeam] = createTeam();
       }
 
-      result[match.homeTeam] = calculateStatistics(result[match.homeTeam], match.homeTeam, match.homeTeamScore, match.awayTeamScore);
-      result[match.awayTeam] = calculateStatistics(result[match.awayTeam], match.awayTeam, match.awayTeamScore, match.homeTeamScore);
+      if (typeof match.homeTeamScore !== 'undefined') {
+        result[match.homeTeam] = calculateStatistics(result[match.homeTeam], match.homeTeam, match.homeTeamScore, match.awayTeamScore);
+        result[match.awayTeam] = calculateStatistics(result[match.awayTeam], match.awayTeam, match.awayTeamScore, match.homeTeamScore);
+      }
     });
 
     _.forOwn(result, function (value, key) {
@@ -25,11 +27,15 @@ module.exports = function (api, db) {
     positions = _.sortBy(positions, 'points');
     positions = positions.reverse();
 
-    res.send(_.map(positions, function (pos) {
-      pos.position = position;
-      position = position + 1;
-      return pos;
-    }));
+    res.send({
+      positions: _.map(positions, function (pos) {
+        var temp = {
+          position: position
+        };
+        position = position + 1;
+        return _.merge(temp, pos);
+      })
+    });
   });
 
   function createTeam() {

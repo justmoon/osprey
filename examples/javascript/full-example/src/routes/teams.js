@@ -15,7 +15,7 @@ module.exports = function (api, db) {
       res.send(404);
     }
 
-    res.send(teams);
+    res.send({ teams: teams });
   });
 
   api.post('/teams', function (req, res) {
