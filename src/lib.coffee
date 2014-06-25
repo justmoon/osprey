@@ -5,11 +5,11 @@ UriTemplateReader = require './uri-template-reader'
 logger            = require './utils/logger'
 path              = require 'path'
 express           = require 'express'
-_                 = require 'lodash'
+conneg            = require './routers/conneg'
+mocks             = require './routers/mocks'
 
-# Refactor
-InvalidAcceptTypeError = require './errors/invalid-accept-type-error'
-InvalidContentTypeError = require './errors/invalid-content-type-error'
+Middleware        = require './middlewares/validation'
+validation        = require './routers/validation'
 
 exports.create = (settings) ->
   unless settings.ramlFile
@@ -24,37 +24,17 @@ exports.create = (settings) ->
     resources = wrapper.getResources()
     uriTemplateReader = new UriTemplateReader wrapper.getUriTemplates()
 
-    # Extract to another class
-    _.forOwn wrapper.getUriTemplatesByHttpMethod(), (uriTemplates, method) ->
-      _.forEach uriTemplates, (uriTemplate) ->
+    if settings.enableValidations
+      middleware = new Middleware(null, null, wrapper.getResources(), uriTemplateReader, logger)
+      validation wrapper, ospreyApp, middleware
 
-        methodInfo = wrapper.getMethodInfo method, uriTemplate
-        statusCode = _.first(Object.keys(methodInfo.responses)) || 200
-        body = methodInfo.responses?[statusCode]?.body
-        mimeTypes = if body then Object.keys(body) else []
+    # Loading conneg handlers
+    conneg wrapper, ospreyApp
 
-        if mimeTypes.length
-          # Register Accept Negotiations only if there are mime-types defined
-          ospreyApp[method] uriTemplate, (req, res, next) ->
-            supportedType = req.accepts(mimeTypes)
-            throw new InvalidAcceptTypeError unless supportedType
-            res.set 'Content-Type', supportedType
-            next()
+    if settings.enableMocks
+      # Loading mocks handlers
+      mocks wrapper, ospreyApp
 
-        # Register Content-Type Negotiations only if there are mime-types defined
-        if method in ['patch', 'post', 'put']
-          ospreyApp[method] uriTemplate, (req, res, next) ->
-            isValid = false
-
-            for value in mimeTypes
-              console.log value
-              if req.is(value)
-                isValid = true
-                break
-
-            throw new InvalidContentTypeError unless isValid or not req.get('Content-Type')?
-
-            next()
 
     osprey.load null, uriTemplateReader, resources
 

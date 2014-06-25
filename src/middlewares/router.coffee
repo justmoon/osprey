@@ -55,6 +55,7 @@ class OspreyRouter extends RamlHelper
 
     result? and result.length is 1
 
+  # TODO: Refactor
   resolveMethod: (config) =>
     resourceExists = @resources[config.template]?.methods?.filter (info) -> info.method == config.method
     if resourceExists? and resourceExists.length > 0

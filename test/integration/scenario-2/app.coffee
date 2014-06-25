@@ -9,11 +9,13 @@ app.use xmlparser()
 app.use express.json()
 app.use express.urlencoded()
 
-app.use '/api', osprey.create
+api = osprey.create
   ramlFile: path.join(__dirname, 'api.raml')
   enableMocks: true
   enableValidations: true
   enableConsole: false
   logLevel: 'off'
+
+api.mount '/api', app
 
 module.exports = app

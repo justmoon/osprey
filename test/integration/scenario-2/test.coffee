@@ -136,4 +136,4 @@ describe 'SCENARIO 2 - RAML BASED MOCKS + VALIDATIONS', ->
           res.status.should.be.eql 400
 
           done()
-        )        
+        )

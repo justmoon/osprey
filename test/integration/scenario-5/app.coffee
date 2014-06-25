@@ -9,40 +9,43 @@ app.use xmlparser()
 app.use express.json()
 app.use express.urlencoded()
 
-api = osprey.create '/api', app,
+api = osprey.create
   ramlFile: path.join(__dirname, 'api.raml')
   enableMocks: true
   enableValidations: true
   enableConsole: false
   logLevel: 'off'
 
-api.get '/all', (req, res) ->
-  res.send([{
-    id: 1
-    description: 'GET' 
-  }])
+api.mount '/api', app
 
-api.post '/all', (req, res) ->
-  res.status 201
-  res.send { description: 'POST' }
+api.describe (api) ->
+  api.get '/all', (req, res) ->
+    res.send([{
+      id: 1
+      description: 'GET'
+    }])
 
-api.head '/all', (req, res) ->
-  res.set 'header', 'HEAD'
-  res.send 204
+  api.post '/all', (req, res) ->
+    res.status 201
+    res.send { description: 'POST' }
 
-api.get '/all/:id', (req, res) ->
-  res.send { id: 1, description: 'GET' }
+  api.head '/all', (req, res) ->
+    res.set 'header', 'HEAD'
+    res.send 204
 
-api.put '/all/:id', (req, res) ->
-  res.set 'header', 'PUT'
-  res.send 204
+  api.get '/all/:id', (req, res) ->
+    res.send { id: 1, description: 'GET' }
 
-api.patch '/all/:id', (req, res) ->
-  res.set 'header', 'PATCH'
-  res.send 204
+  api.put '/all/:id', (req, res) ->
+    res.set 'header', 'PUT'
+    res.send 204
 
-api.delete '/all/:id', (req, res) ->
-  res.set 'header', 'DELETE'
-  res.send 204
+  api.patch '/all/:id', (req, res) ->
+    res.set 'header', 'PATCH'
+    res.send 204
+
+  api.delete '/all/:id', (req, res) ->
+    res.set 'header', 'DELETE'
+    res.send 204
 
 module.exports = app

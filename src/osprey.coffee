@@ -15,10 +15,10 @@ class Osprey extends OspreyBase
 
     middlewares.push DefaultParameters
 
-    if @settings.enableValidations
-      middlewares.push Validation
+    # if @settings.enableValidations
+    #   middlewares.push Validation
 
-    middlewares.push OspreyRouter
+    # middlewares.push OspreyRouter
     middlewares.push ErrorHandler
 
     @registerMiddlewares middlewares, @context, @settings, resources, uriTemplateReader, @logger
