@@ -7,6 +7,7 @@ class MockGetHandler extends HttpUtils
     @setDefaultHeaders res, methodInfo
     @negotiateAcceptType req, res, methodInfo
 
+# Remove this code!
 class GetHandler extends HttpUtils
   constructor: (@apiPath, @context, @resources) ->
 

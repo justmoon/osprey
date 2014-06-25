@@ -59,12 +59,17 @@ class Osprey extends OspreyBase
   load: (err, uriTemplateReader, resources) ->
     unless err?
       if @apiDescriptor? and typeof @apiDescriptor == 'function'
-        @apiDescriptor this, @container
+        @apiDescriptor @context
 
       @register(uriTemplateReader, resources)
 
-  describe: (descriptor) ->
+  # Temporary Hack
+  describe: (descriptor) =>
     @apiDescriptor = descriptor
-    Promise.resolve @container
+    Promise.resolve @context.parent
+
+  # Temporary Hack
+  mount: (basePath, app) ->
+    app.use '/api', @context
 
 module.exports = Osprey

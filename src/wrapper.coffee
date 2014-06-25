@@ -1,4 +1,5 @@
 ramlParser = require 'raml-parser'
+_          = require 'lodash'
 
 extend = (dest, sources...) ->
   for source in sources
@@ -23,6 +24,25 @@ class ParserWrapper
       templates.push { uriTemplate: key }
 
     templates
+
+  getUriTemplatesByHttpMethod: ->
+    templates = {}
+
+    _.forOwn @resources, (value, key) ->
+      _.forEach value.methods, (method) ->
+        unless templates[method.method]?
+          templates[method.method] = []
+
+        templates[method.method].push(key);
+
+    templates
+
+  getMethodInfo: (httpMethod, uriTemplate) ->
+    if @resources[uriTemplate]?.methods?
+      methodInfo = @resources[uriTemplate].methods.filter (method) ->
+        method.method == httpMethod
+
+    if methodInfo? and methodInfo.length then methodInfo[0] else null
 
   getResourcesList: ->
     resourceList = []
