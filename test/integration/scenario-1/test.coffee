@@ -51,7 +51,7 @@ describe 'SCENARIO 1 - RAML BASED MOCKS', ->
           .set('Accept', 'application/json')
           .end((err, res) ->
             # Assert
-            res.headers['content-type'].should.be.eql 'application/json'
+            res.headers['content-type'].should.be.eql 'application/json; charset=utf-8'
 
             done()
           )
@@ -74,7 +74,7 @@ describe 'SCENARIO 1 - RAML BASED MOCKS', ->
             # Assert
             res.status.should.be.eql 201
             res.body.description.should.eql 'description'
-          
+
             done()
           )
 
@@ -84,7 +84,7 @@ describe 'SCENARIO 1 - RAML BASED MOCKS', ->
           .end((err, res) ->
             # Assert
             res.body.description.should.eql 'description'
-          
+
             done()
           )
 
@@ -94,7 +94,7 @@ describe 'SCENARIO 1 - RAML BASED MOCKS', ->
           .end((err, res) ->
             # Assert
             res.headers['header'] .should.be.eql 'POST'
-          
+
             done()
           )
 
@@ -103,8 +103,8 @@ describe 'SCENARIO 1 - RAML BASED MOCKS', ->
           .post('/resources')
           .end((err, res) ->
             # Assert
-            res.headers['content-type'].should.be.eql 'application/json'
-          
+            res.headers['content-type'].should.be.eql 'application/json; charset=utf-8'
+
             done()
           )
 
@@ -134,7 +134,7 @@ describe 'SCENARIO 1 - RAML BASED MOCKS', ->
             # Assert
             res.status.should.be.eql 204
             res.body.should.eql {}
-          
+
             done()
           )
 
@@ -145,7 +145,7 @@ describe 'SCENARIO 1 - RAML BASED MOCKS', ->
             # Assert
             res.headers['header'] .should.be.eql 'PUT'
             res.body.should.eql {}
-          
+
             done()
           )
 
@@ -187,7 +187,7 @@ describe 'SCENARIO 1 - RAML BASED MOCKS', ->
             # Assert
             res.status.should.be.eql 204
             res.body.should.eql {}
-          
+
             done()
           )
 
@@ -198,7 +198,7 @@ describe 'SCENARIO 1 - RAML BASED MOCKS', ->
             # Assert
             res.headers['header'] .should.be.eql 'PATCH'
             res.body.should.eql {}
-          
+
             done()
           )
 
@@ -253,7 +253,7 @@ describe 'SCENARIO 1 - RAML BASED MOCKS', ->
           .set('Accept', 'application/json')
           .end((err, res) ->
             # Assert
-            res.headers['content-type'].should.be.eql 'application/json'
+            res.headers['content-type'].should.be.eql 'application/json; charset=utf-8'
 
             done()
           )
@@ -275,7 +275,7 @@ describe 'SCENARIO 1 - RAML BASED MOCKS', ->
           .end((err, res) ->
             # Assert
             res.status.should.be.eql 204
-          
+
             done()
           )
 
@@ -285,7 +285,7 @@ describe 'SCENARIO 1 - RAML BASED MOCKS', ->
           .end((err, res) ->
             # Assert
             res.headers['header'] .should.be.eql 'DELETE'
-          
+
             done()
           )
 
@@ -352,7 +352,7 @@ describe 'SCENARIO 1 - RAML BASED MOCKS', ->
             .set('Accept', 'application/json')
             .end((err, res) ->
               # Assert
-              res.headers['content-type'].should.be.eql 'application/json'
+              res.headers['content-type'].should.be.eql 'application/json; charset=utf-8'
 
               done()
             )

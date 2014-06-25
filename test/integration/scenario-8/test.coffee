@@ -30,7 +30,7 @@ describe 'SCENARIO 8 - MULTIPLE APIs', ->
             .set('Accept', 'application/json')
             .end((err, res) ->
               # Assert
-              res.headers['content-type'].should.be.eql 'application/json'
+              res.headers['content-type'].should.be.eql 'application/json; charset=utf-8'
 
               done()
             )
@@ -52,7 +52,7 @@ describe 'SCENARIO 8 - MULTIPLE APIs', ->
               # Assert
               res.status.should.be.eql 201
               res.body.description.should.eql 'POST'
-            
+
               done()
             )
 
@@ -61,8 +61,8 @@ describe 'SCENARIO 8 - MULTIPLE APIs', ->
             .post('/overwrite')
             .end((err, res) ->
               # Assert
-              res.headers['content-type'].should.be.eql 'application/json'
-            
+              res.headers['content-type'].should.be.eql 'application/json; charset=utf-8'
+
               done()
             )
 
@@ -117,7 +117,7 @@ describe 'SCENARIO 8 - MULTIPLE APIs', ->
             .set('Accept', 'application/json')
             .end((err, res) ->
               # Assert
-              res.headers['content-type'].should.be.eql 'application/json'
+              res.headers['content-type'].should.be.eql 'application/json; charset=utf-8'
 
               done()
             )
@@ -140,7 +140,7 @@ describe 'SCENARIO 8 - MULTIPLE APIs', ->
               res.status.should.be.eql 204
               res.headers['header'] .should.be.eql 'PUT'
               res.body.should.eql {}
-            
+
               done()
             )
 
@@ -162,7 +162,7 @@ describe 'SCENARIO 8 - MULTIPLE APIs', ->
               res.status.should.be.eql 204
               res.headers['header'] .should.be.eql 'PATCH'
               res.body.should.eql {}
-            
+
               done()
             )
 
@@ -223,7 +223,7 @@ describe 'SCENARIO 8 - MULTIPLE APIs', ->
             .set('Accept', 'application/json')
             .end((err, res) ->
               # Assert
-              res.headers['content-type'].should.be.eql 'application/json'
+              res.headers['content-type'].should.be.eql 'application/json; charset=utf-8'
 
               done()
             )
@@ -245,7 +245,7 @@ describe 'SCENARIO 8 - MULTIPLE APIs', ->
               # Assert
               res.status.should.be.eql 201
               res.body.description.should.eql 'POST'
-            
+
               done()
             )
 
@@ -254,8 +254,8 @@ describe 'SCENARIO 8 - MULTIPLE APIs', ->
             .post('/overwrite')
             .end((err, res) ->
               # Assert
-              res.headers['content-type'].should.be.eql 'application/json'
-            
+              res.headers['content-type'].should.be.eql 'application/json; charset=utf-8'
+
               done()
             )
 
@@ -310,7 +310,7 @@ describe 'SCENARIO 8 - MULTIPLE APIs', ->
             .set('Accept', 'application/json')
             .end((err, res) ->
               # Assert
-              res.headers['content-type'].should.be.eql 'application/json'
+              res.headers['content-type'].should.be.eql 'application/json; charset=utf-8'
 
               done()
             )
@@ -333,7 +333,7 @@ describe 'SCENARIO 8 - MULTIPLE APIs', ->
               res.status.should.be.eql 204
               res.headers['header'] .should.be.eql 'PUT'
               res.body.should.eql {}
-            
+
               done()
             )
 
@@ -355,7 +355,7 @@ describe 'SCENARIO 8 - MULTIPLE APIs', ->
               res.status.should.be.eql 204
               res.headers['header'] .should.be.eql 'PATCH'
               res.body.should.eql {}
-            
+
               done()
             )
 

@@ -1,5 +1,5 @@
 class DefaultParameters
-  constructor: (@apiPath, @context, @settings, @resources, @uriTemplateReader, @logger) ->
+  constructor: (@context, @settings, @resources, @uriTemplateReader, @logger) ->
     @logger.info 'Osprey::DefaultParameters has been initialized successfully'
 
   exec: (req, res, next) =>

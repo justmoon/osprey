@@ -32,7 +32,7 @@ describe 'SCENARIO 5 - OVERWRITE RESOURCES + VALIDATIONS + MOCKS', ->
             .set('Accept', 'application/json')
             .end((err, res) ->
               # Assert
-              res.headers['content-type'].should.be.eql 'application/json'
+              res.headers['content-type'].should.be.eql 'application/json; charset=utf-8'
 
               done()
             )
@@ -57,7 +57,7 @@ describe 'SCENARIO 5 - OVERWRITE RESOURCES + VALIDATIONS + MOCKS', ->
               # Assert
               res.status.should.be.eql 201
               res.body.description.should.eql 'POST'
-            
+
               done()
             )
 
@@ -68,8 +68,8 @@ describe 'SCENARIO 5 - OVERWRITE RESOURCES + VALIDATIONS + MOCKS', ->
             .send({ param: 'val' })
             .end((err, res) ->
               # Assert
-              res.headers['content-type'].should.be.eql 'application/json'
-            
+              res.headers['content-type'].should.be.eql 'application/json; charset=utf-8'
+
               done()
             )
 
@@ -117,7 +117,7 @@ describe 'SCENARIO 5 - OVERWRITE RESOURCES + VALIDATIONS + MOCKS', ->
             .set('Accept', 'application/json')
             .end((err, res) ->
               # Assert
-              res.headers['content-type'].should.be.eql 'application/json'
+              res.headers['content-type'].should.be.eql 'application/json; charset=utf-8'
 
               done()
             )
@@ -141,7 +141,7 @@ describe 'SCENARIO 5 - OVERWRITE RESOURCES + VALIDATIONS + MOCKS', ->
               res.status.should.be.eql 204
               res.headers['header'] .should.be.eql 'PUT'
               res.body.should.eql {}
-            
+
               done()
             )
 
@@ -164,7 +164,7 @@ describe 'SCENARIO 5 - OVERWRITE RESOURCES + VALIDATIONS + MOCKS', ->
               res.status.should.be.eql 204
               res.headers['header'] .should.be.eql 'PATCH'
               res.body.should.eql {}
-            
+
               done()
             )
 
@@ -319,7 +319,7 @@ describe 'SCENARIO 5 - OVERWRITE RESOURCES + VALIDATIONS + MOCKS', ->
             res.status.should.be.eql 400
 
             done()
-          )    
+          )
 
   describe 'MOCK RESOURCES', ->
 
@@ -372,7 +372,7 @@ describe 'SCENARIO 5 - OVERWRITE RESOURCES + VALIDATIONS + MOCKS', ->
             .query('param=GET')
             .end((err, res) ->
               # Assert
-              res.headers['content-type'].should.be.eql 'application/json'
+              res.headers['content-type'].should.be.eql 'application/json; charset=utf-8'
 
               done()
             )
@@ -395,7 +395,7 @@ describe 'SCENARIO 5 - OVERWRITE RESOURCES + VALIDATIONS + MOCKS', ->
               # Assert
               res.status.should.be.eql 201
               res.body.description.should.eql 'description'
-            
+
               done()
             )
 
@@ -405,7 +405,7 @@ describe 'SCENARIO 5 - OVERWRITE RESOURCES + VALIDATIONS + MOCKS', ->
             .end((err, res) ->
               # Assert
               res.body.description.should.eql 'description'
-            
+
               done()
             )
 
@@ -415,7 +415,7 @@ describe 'SCENARIO 5 - OVERWRITE RESOURCES + VALIDATIONS + MOCKS', ->
             .end((err, res) ->
               # Assert
               res.headers['header'] .should.be.eql 'POST'
-            
+
               done()
             )
 
@@ -424,8 +424,8 @@ describe 'SCENARIO 5 - OVERWRITE RESOURCES + VALIDATIONS + MOCKS', ->
             .post('/mocks')
             .end((err, res) ->
               # Assert
-              res.headers['content-type'].should.be.eql 'application/json'
-            
+              res.headers['content-type'].should.be.eql 'application/json; charset=utf-8'
+
               done()
             )
 
@@ -456,7 +456,7 @@ describe 'SCENARIO 5 - OVERWRITE RESOURCES + VALIDATIONS + MOCKS', ->
               # Assert
               res.status.should.be.eql 204
               res.body.should.eql {}
-            
+
               done()
             )
 
@@ -468,7 +468,7 @@ describe 'SCENARIO 5 - OVERWRITE RESOURCES + VALIDATIONS + MOCKS', ->
               # Assert
               res.headers['header'] .should.be.eql 'PUT'
               res.body.should.eql {}
-            
+
               done()
             )
 
@@ -511,7 +511,7 @@ describe 'SCENARIO 5 - OVERWRITE RESOURCES + VALIDATIONS + MOCKS', ->
               # Assert
               res.status.should.be.eql 204
               res.body.should.eql {}
-            
+
               done()
             )
 
@@ -522,7 +522,7 @@ describe 'SCENARIO 5 - OVERWRITE RESOURCES + VALIDATIONS + MOCKS', ->
               # Assert
               res.headers['header'] .should.be.eql 'PATCH'
               res.body.should.eql {}
-            
+
               done()
             )
 
@@ -577,7 +577,7 @@ describe 'SCENARIO 5 - OVERWRITE RESOURCES + VALIDATIONS + MOCKS', ->
             .set('Accept', 'application/json')
             .end((err, res) ->
               # Assert
-              res.headers['content-type'].should.be.eql 'application/json'
+              res.headers['content-type'].should.be.eql 'application/json; charset=utf-8'
 
               done()
             )
@@ -599,7 +599,7 @@ describe 'SCENARIO 5 - OVERWRITE RESOURCES + VALIDATIONS + MOCKS', ->
             .end((err, res) ->
               # Assert
               res.status.should.be.eql 204
-            
+
               done()
             )
 
@@ -609,7 +609,7 @@ describe 'SCENARIO 5 - OVERWRITE RESOURCES + VALIDATIONS + MOCKS', ->
             .end((err, res) ->
               # Assert
               res.headers['header'] .should.be.eql 'DELETE'
-            
+
               done()
             )
 
@@ -765,4 +765,4 @@ describe 'SCENARIO 5 - OVERWRITE RESOURCES + VALIDATIONS + MOCKS', ->
             res.status.should.be.eql 400
 
             done()
-          )   
+          )

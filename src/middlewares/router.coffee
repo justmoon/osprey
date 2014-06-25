@@ -7,7 +7,7 @@ PatchMethod = require '../handlers/patch-handler'
 RamlHelper = require '../utils/raml-helper'
 
 class OspreyRouter extends RamlHelper
-  constructor: (@apiPath, @context, @settings, @resources, @uriTemplateReader, @logger) ->
+  constructor: (@context, @settings, @resources, @uriTemplateReader, @logger) ->
     @logger.info 'Osprey::Router has been initialized successfully'
 
     @mockMethodHandlers =
@@ -19,12 +19,12 @@ class OspreyRouter extends RamlHelper
       patch: new PatchMethod.MockHandler
 
     @methodHandlers =
-      get: new GetMethod.Handler @apiPath, @context, @resources
-      post: new PostMethod.Handler @apiPath, @context, @resources
-      put: new PutMethod.Handler @apiPath, @context, @resources
-      delete: new DeleteMethod.Handler @apiPath, @context, @resources
-      head: new HeadMethod.Handler @apiPath, @context, @resources
-      patch: new PatchMethod.Handler @apiPath, @context, @resources
+      get: new GetMethod.Handler @context.route, @context, @resources
+      post: new PostMethod.Handler @context.route, @context, @resources
+      put: new PutMethod.Handler @context.route, @context, @resources
+      delete: new DeleteMethod.Handler @context.route, @context, @resources
+      head: new HeadMethod.Handler @context.route, @context, @resources
+      patch: new PatchMethod.Handler @context.route, @context, @resources
 
     if @settings.handlers?
       for handler in @settings.handlers

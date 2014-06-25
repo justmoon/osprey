@@ -8,7 +8,7 @@ libxml = require 'libxmljs'
 Validators = require './validators'
 
 class Validation
-  constructor: (@apiPath, @context, @settings, @resources, @uriTemplateReader, @logger) ->
+  constructor: (@context, @settings, @resources, @uriTemplateReader, @logger) ->
     @logger.info 'Osprey::Validations has been initialized successfully'
 
   exec: (req, res, next) =>

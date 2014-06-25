@@ -21,12 +21,12 @@ class Osprey extends OspreyBase
     middlewares.push OspreyRouter
     middlewares.push ErrorHandler
 
-    @registerMiddlewares middlewares, @apiPath, @context, @settings, resources, uriTemplateReader, @logger
+    @registerMiddlewares middlewares, @context, @settings, resources, uriTemplateReader, @logger
 
   registerConsole: () =>
     if @settings.enableConsole
-      @context.get @settings.consolePath, @consoleHandler(@apiPath, @settings.consolePath)
-      @context.get url.resolve(@settings.consolePath + '/', 'index.html'), @consoleHandler(@apiPath, @settings.consolePath)
+      @context.get @settings.consolePath, @consoleHandler(@context.route, @settings.consolePath)
+      @context.get url.resolve(@settings.consolePath + '/', 'index.html'), @consoleHandler(@context.route, @settings.consolePath)
       @context.use @settings.consolePath, express.static(path.join(__dirname, 'assets/console'))
 
       @context.get '/', @ramlHandler(@settings.ramlFile)

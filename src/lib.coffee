@@ -11,9 +11,8 @@ exports.create = (apiPath, context, settings) ->
     settings.ramlFile = path.join process.cwd(), '/src/assets/raml/api.raml'
 
   ospreyApp = express()
-  context.use apiPath, ospreyApp
 
-  osprey = new Osprey apiPath, ospreyApp, settings, logger, context
+  osprey = new Osprey ospreyApp, settings, logger, context
 
   logger.setLevel settings.logLevel
 
@@ -29,4 +28,4 @@ exports.create = (apiPath, context, settings) ->
     # occur until we actually can handle it with Osprey.
     osprey.registerConsole()
 
-  osprey
+  ospreyApp
