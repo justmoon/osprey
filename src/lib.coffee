@@ -35,7 +35,6 @@ exports.create = (settings) ->
       # Loading mocks handlers
       mocks wrapper, ospreyApp
 
-
     osprey.load null, uriTemplateReader, resources
 
     # Register the console after Osprey has been loaded, since Osprey is

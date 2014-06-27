@@ -2,6 +2,7 @@ express = require 'express'
 path = require 'path'
 osprey = require '../../../src/lib'
 xmlparser = require 'express-xml-bodyparser'
+_ = require 'lodash'
 
 app = express()
 
@@ -47,5 +48,9 @@ api.describe (api) ->
   api.delete '/all/:id', (req, res) ->
     res.set 'header', 'DELETE'
     res.send 204
+
+  _.forEach api.routes.get, (obj) ->
+      console.log obj.path
+      console.log obj.callbacks
 
 module.exports = app
