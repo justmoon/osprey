@@ -1,6 +1,7 @@
 express = require 'express'
 path = require 'path'
 osprey = require '../../../src/lib'
+_ = require 'lodash'
 
 app = express()
 
@@ -45,5 +46,8 @@ api.describe (api) ->
   api.delete '/overwrite/:id', (req, res) ->
     res.set 'header', 'DELETE'
     res.send 204
+
+  # _.forEach api.routes.get, (route) ->
+  #   console.log "#{route.path}: #{_.first(route.callbacks).name}"
 
 module.exports = app

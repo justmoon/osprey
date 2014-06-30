@@ -25,6 +25,8 @@ module.exports =  (wrapper, ospreyApp) ->
 
         next();
       }`
+
+      # ospreyApp.use uriTemplate, parametersHandler
       ospreyApp[method] uriTemplate, parametersHandler
 
       isOverridden = (ospreyApp, req) ->
@@ -55,6 +57,8 @@ module.exports =  (wrapper, ospreyApp) ->
         mockHandler = `function mockHandler(req, res, next) {
           handler(req, res, next);
         }`
+
+        # ospreyApp.use uriTemplate, mockHandler
         ospreyApp[method] uriTemplate, mockHandler
 
       # Set Response
@@ -67,4 +71,6 @@ module.exports =  (wrapper, ospreyApp) ->
         mockHandler = `function mockHandler(req, res, next) {
           handler(req, res, next);
         }`
+
+        # ospreyApp.use uriTemplate, mockHandler
         ospreyApp[method] uriTemplate, mockHandler

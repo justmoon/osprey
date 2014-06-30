@@ -8,4 +8,5 @@ module.exports =  (wrapper, ospreyApp, middleware) ->
           middleware.exec(req, res, next);
         }`
 
-        ospreyApp[method] uriTemplate, defaultParametersHandler
+        ospreyApp.use uriTemplate, defaultParametersHandler
+        # ospreyApp[method] uriTemplate, defaultParametersHandler

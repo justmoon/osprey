@@ -15,31 +15,38 @@ module.exports =  (wrapper, ospreyApp) ->
       if mimeTypes.length
         if method in ['get', 'patch', 'post', 'put']
           acceptNegotiationHandler = `function acceptNegotiationHandler(req, res, next) {
-            var supportedType = req.accepts(mimeTypes);
-            supportedType = req.accepts(mimeTypes);
-            if (!supportedType) {
-              throw new InvalidAcceptTypeError();
+            if (req.method.toLowerCase() === method) {
+              var supportedType = req.accepts(mimeTypes);
+              supportedType = req.accepts(mimeTypes);
+              if (!supportedType) {
+                throw new InvalidAcceptTypeError();
+              }
+              res.set('Content-Type', supportedType);
             }
-            res.set('Content-Type', supportedType);
+
             next();
           }`
 
-          ospreyApp[method] uriTemplate, acceptNegotiationHandler
+          ospreyApp.use uriTemplate, acceptNegotiationHandler
+          # ospreyApp[method] uriTemplate, acceptNegotiationHandler
 
       # Register Content-Type Negotiations only if there are mime-types defined
       if method in ['patch', 'post', 'put']
         handler = (req, res, next) ->
-          isValid = false
+          if req.method.toLowerCase() == method
+            isValid = false
 
-          for value in contenTypes
-            if req.is(value)
-              isValid = true
-              break
+            for value in contenTypes
+              if req.is(value)
+                isValid = true
+                break
 
-          throw new InvalidContentTypeError unless isValid or not req.get('Content-Type')?
+            throw new InvalidContentTypeError unless isValid or not req.get('Content-Type')?
+
           next()
         contentTypeNegotiationHandler = `function contentTypeNegotiationHandler(req, res, next) {
             handler(req, res, next);
           }`
 
-        ospreyApp[method] uriTemplate, contentTypeNegotiationHandler
+        ospreyApp.use uriTemplate, contentTypeNegotiationHandler
+        # ospreyApp[method] uriTemplate, contentTypeNegotiationHandler
