@@ -1,3 +1,4 @@
+# TODO: Refactor me!!!
 class DefaultParameters
   constructor: (@context, @settings, @resources, @uriTemplateReader, @logger) ->
     @logger.info 'Osprey::DefaultParameters has been initialized successfully'

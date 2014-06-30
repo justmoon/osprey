@@ -8,8 +8,12 @@ express           = require 'express'
 conneg            = require './routers/conneg'
 mocks             = require './routers/mocks'
 
+# TODO: Refactor
 Middleware        = require './middlewares/validation'
 validation        = require './routers/validation'
+# TODO: Refactor
+dpMiddleware      = require './middlewares/default-parameters'
+dp                = require './routers/default-parameters'
 
 exports.create = (settings) ->
   unless settings.ramlFile
@@ -24,15 +28,20 @@ exports.create = (settings) ->
     resources = wrapper.getResources()
     uriTemplateReader = new UriTemplateReader wrapper.getUriTemplates()
 
+    # Loading validations handler
     if settings.enableValidations
       middleware = new Middleware(null, null, wrapper.getResources(), uriTemplateReader, logger)
       validation wrapper, ospreyApp, middleware
 
-    # Loading conneg handlers
+    # Loading defaul parameters handler
+    middleware = new dpMiddleware(null, null, wrapper.getResources(), uriTemplateReader, logger)
+    dp wrapper, ospreyApp, middleware
+
+    # Loading conneg handler
     conneg wrapper, ospreyApp
 
+    # Loading mocks handler
     if settings.enableMocks
-      # Loading mocks handlers
       mocks wrapper, ospreyApp
 
     osprey.load null, uriTemplateReader, resources

@@ -7,7 +7,7 @@ app = express()
 app.use express.json()
 app.use express.urlencoded()
 
-api1 = osprey.create '/api1', app,
+api1 = osprey.create
   ramlFile: path.join(__dirname, 'api1.raml')
   enableMocks: false
   enableValidations: false

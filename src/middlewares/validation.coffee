@@ -7,6 +7,7 @@ InvalidBodyError = require '../errors/invalid-body-error'
 libxml = require 'libxmljs'
 Validators = require './validators'
 
+# TODO: Refactor me!!!
 class Validation
   constructor: (@context, @settings, @resources, @uriTemplateReader, @logger) ->
     @logger.info 'Osprey::Validations has been initialized successfully'

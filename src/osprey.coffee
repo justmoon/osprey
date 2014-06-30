@@ -3,7 +3,6 @@ path = require 'path'
 Validation = require './middlewares/validation'
 DefaultParameters = require './middlewares/default-parameters'
 ErrorHandler = require './middlewares/error-handler'
-OspreyRouter = require './middlewares/router'
 OspreyBase = require './osprey-base'
 fs = require 'fs'
 url = require 'url'
@@ -13,12 +12,6 @@ class Osprey extends OspreyBase
   register: (uriTemplateReader, resources) =>
     middlewares = []
 
-    middlewares.push DefaultParameters
-
-    # if @settings.enableValidations
-    #   middlewares.push Validation
-
-    # middlewares.push OspreyRouter
     middlewares.push ErrorHandler
 
     @registerMiddlewares middlewares, @context, @settings, resources, uriTemplateReader, @logger
@@ -32,7 +25,7 @@ class Osprey extends OspreyBase
       @context.get '/', @ramlHandler(@settings.ramlFile)
       @context.use '/', express.static(path.dirname(@settings.ramlFile))
 
-      @logger.info "Osprey::APIConsole has been initialized successfully listening at #{@apiPath + @settings.consolePath}"
+      @logger.info "Osprey::APIConsole has been initialized successfully listening at #{@context.route + @settings.consolePath}"
 
   consoleHandler: (apiPath, consolePath) ->
     (req, res) ->
@@ -70,6 +63,6 @@ class Osprey extends OspreyBase
 
   # Temporary Hack
   mount: (basePath, app) ->
-    app.use '/api', @context
+    app.use basePath, @context
 
 module.exports = Osprey

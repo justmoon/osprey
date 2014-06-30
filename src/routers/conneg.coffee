@@ -14,16 +14,17 @@ module.exports =  (wrapper, ospreyApp) ->
       # Register Accept Negotiations only if there are mime-types defined
       if mimeTypes.length
         if method in ['get', 'patch', 'post', 'put']
-          handler = (req, res, next) ->
-            supportedType = req.accepts(mimeTypes)
-            throw new InvalidAcceptTypeError unless supportedType
-            res.set 'Content-Type', supportedType
-            next()
-          connegHandler = `function connegHandler(req, res, next) {
-            handler(req, res, next);
+          acceptNegotiationHandler = `function acceptNegotiationHandler(req, res, next) {
+            var supportedType = req.accepts(mimeTypes);
+            supportedType = req.accepts(mimeTypes);
+            if (!supportedType) {
+              throw new InvalidAcceptTypeError();
+            }
+            res.set('Content-Type', supportedType);
+            next();
           }`
 
-          ospreyApp[method] uriTemplate, connegHandler
+          ospreyApp[method] uriTemplate, acceptNegotiationHandler
 
       # Register Content-Type Negotiations only if there are mime-types defined
       if method in ['patch', 'post', 'put']
@@ -37,8 +38,8 @@ module.exports =  (wrapper, ospreyApp) ->
 
           throw new InvalidContentTypeError unless isValid or not req.get('Content-Type')?
           next()
-        connegHandler = `function connegHandler(req, res, next) {
+        contentTypeNegotiationHandler = `function contentTypeNegotiationHandler(req, res, next) {
             handler(req, res, next);
           }`
 
-        ospreyApp[method] uriTemplate, connegHandler
+        ospreyApp[method] uriTemplate, contentTypeNegotiationHandler

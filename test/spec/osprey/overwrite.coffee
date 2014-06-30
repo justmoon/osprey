@@ -1,116 +1,133 @@
 Osprey = require '../../../src/osprey'
 parser = require '../../../src/wrapper'
-OspreyRouter = require '../../../src/middlewares/router'
 UriTemplateReader = require '../../../src/uri-template-reader'
 should = require 'should'
-Express = require('../../mocks/server').express
 Logger = require '../../mocks/logger'
+express = require 'express'
 
 describe 'OSPREY - OVERWRITE', =>
-  before () =>
-    parser.loadRaml "./test/assets/well-formed.raml", new Logger, (wrapper) =>
-      @resources = wrapper.getResources()
-      templates = wrapper.getUriTemplates()
-      @uriTemplateReader = new UriTemplateReader templates
-
-  it 'Should be able to overwrite an existing resource - GET', () =>
+  it 'Should be able to overwrite an existing resource - GET', (done) ->
     # Arrange
-    context = new Express
-    osprey = new Osprey '/api', context, {}, new Logger
+    logger = new Logger
+    app = express()
+    osprey = new Osprey express(), {}, logger
 
-    osprey.get '/resource', (req, res) ->
+    parser.loadRaml "./test/assets/well-formed.raml", logger, (wrapper) ->
+      uriTemplateReader = new UriTemplateReader wrapper.getUriTemplates()
+
+      # Act
+      osprey.load null, uriTemplateReader, wrapper.getResources()
+      osprey.mount '/api', app
+
+    osprey.describe (api) ->
+      api.get '/resource', (req, res) ->
+
+      # Assert
+      api.routes.get.should.have.lengthOf 1
+      api.routes.get[0].path.should.eql '/resource'
+      done()
+
+  it 'Should be able to overwrite an existing resource - POST', (done) ->
+    # Arrange
+    logger = new Logger
+    app = express()
+    osprey = new Osprey express(), {}, logger
 
     parser.loadRaml "./test/assets/well-formed.raml", new Logger, (wrapper) =>
       uriTemplateReader = new UriTemplateReader wrapper.getUriTemplates()
 
       # Act
-      osprey.register uriTemplateReader, wrapper.getResources()
+      osprey.load null, uriTemplateReader, wrapper.getResources()
+      osprey.mount '/api', app
+
+    osprey.describe (api) ->
+      api.post '/resource', (req, res) ->
 
       # Assert
-      context.getMethods.should.have.lengthOf 1
-      context.getMethods[0].should.eql '/resource'
+      api.routes.post.should.have.lengthOf 1
+      api.routes.post[0].path.should.eql '/resource'
+      done()
 
-  it 'Should be able to overwrite an existing resource - POST', () =>
+  it 'Should be able to overwrite an existing resource - PUT', (done) ->
     # Arrange
-    context = new Express
-    osprey = new Osprey '/api', context, {}, new Logger
-
-    osprey.post '/resource', (req, res) ->
+    logger = new Logger
+    app = express()
+    osprey = new Osprey express(), {}, logger
 
     parser.loadRaml "./test/assets/well-formed.raml", new Logger, (wrapper) =>
       uriTemplateReader = new UriTemplateReader wrapper.getUriTemplates()
 
       # Act
-      osprey.register uriTemplateReader, wrapper.getResources()
+      osprey.load null, uriTemplateReader, wrapper.getResources()
+      osprey.mount '/api', app
+
+    osprey.describe (api) ->
+      api.put '/resource', (req, res) ->
 
       # Assert
-      context.postMethods.should.have.lengthOf 1
-      context.postMethods[0].should.eql '/resource'
+      api.routes.put.should.have.lengthOf 1
+      api.routes.put[0].path.should.eql '/resource'
+      done()
 
-  it 'Should be able to overwrite an existing resource - PUT', () =>
+  it 'Should be able to overwrite an existing resource - DELETE', (done) ->
     # Arrange
-    context = new Express
-    osprey = new Osprey '/api', context, {}, new Logger
-
-    osprey.put '/resource', (req, res) ->
+    logger = new Logger
+    app = express()
+    osprey = new Osprey express(), {}, logger
 
     parser.loadRaml "./test/assets/well-formed.raml", new Logger, (wrapper) =>
       uriTemplateReader = new UriTemplateReader wrapper.getUriTemplates()
 
       # Act
-      osprey.register uriTemplateReader, wrapper.getResources()
+      osprey.load null, uriTemplateReader, wrapper.getResources()
+      osprey.mount '/api', app
+
+    osprey.describe (api) ->
+      api.delete '/resource', (req, res) ->
 
       # Assert
-      context.putMethods.should.have.lengthOf 1
-      context.putMethods[0].should.eql '/resource'
-
-  it 'Should be able to overwrite an existing resource - DELETE', () =>
-    # Arrange
-    context = new Express
-    osprey = new Osprey '/api', context, {}, new Logger
-
-    osprey.delete '/resource', (req, res) ->
-
-    parser.loadRaml "./test/assets/well-formed.raml", new Logger, (wrapper) =>
-      uriTemplateReader = new UriTemplateReader wrapper.getUriTemplates()
-
-      # Act
-      osprey.register uriTemplateReader, wrapper.getResources()
-
-      # Assert
-      context.deleteMethods.should.have.lengthOf 1
-      context.deleteMethods[0].should.eql '/resource'
+      api.routes.delete.should.have.lengthOf 1
+      api.routes.delete[0].path.should.eql '/resource'
+      done()
 
   it 'Should be able to overwrite an existing resource - HEAD', () =>
     # Arrange
-    context = new Express
-    osprey = new Osprey '/api', context, {}, new Logger
-
-    osprey.head '/resource', (req, res) ->
+    logger = new Logger
+    app = express()
+    osprey = new Osprey express(), {}, logger
 
     parser.loadRaml "./test/assets/well-formed.raml", new Logger, (wrapper) =>
       uriTemplateReader = new UriTemplateReader wrapper.getUriTemplates()
 
       # Act
-      osprey.register uriTemplateReader, wrapper.getResources()
+      osprey.load null, uriTemplateReader, wrapper.getResources()
+      osprey.mount '/api', app
+
+    osprey.describe (api) ->
+      api.head '/resource', (req, res) ->
 
       # Assert
-      context.headMethods.should.have.lengthOf 1
-      context.headMethods[0].should.eql '/resource'
+      api.routes.head.should.have.lengthOf 1
+      api.routes.head[0].path.should.eql '/resource'
+      done()
 
   it 'Should be able to overwrite an existing resource - PATCH', () =>
     # Arrange
-    context = new Express
-    osprey = new Osprey '/api', context, {}, new Logger
-
-    osprey.patch '/resource', (req, res) ->
+    logger = new Logger
+    app = express()
+    osprey = new Osprey express(), {}, logger
 
     parser.loadRaml "./test/assets/well-formed.raml", new Logger, (wrapper) =>
       uriTemplateReader = new UriTemplateReader wrapper.getUriTemplates()
 
       # Act
-      osprey.register uriTemplateReader, wrapper.getResources()
+      osprey.load null, uriTemplateReader, wrapper.getResources()
+      osprey.mount '/api', app
+
+    osprey.describe (api) ->
+      api.patch '/resource', (req, res) ->
 
       # Assert
-      context.patchMethods.should.have.lengthOf 1
-      context.patchMethods[0].should.eql '/resource'
+      api.routes.patch.should.have.lengthOf 1
+      api.routes.patch[0].path.should.eql '/resource'
+      done()
