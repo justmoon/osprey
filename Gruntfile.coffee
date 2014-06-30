@@ -28,6 +28,8 @@ module.exports = (grunt) ->
           level: 'ignore'
         indentation:
           level: 'ignore'
+        no_backticks:
+          level: 'ignore'
 
     mochaTest:
       # TODO: Fix once finish the refactor

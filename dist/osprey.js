@@ -1,5 +1,5 @@
 (function() {
-  var DefaultParameters, ErrorHandler, Osprey, OspreyBase, OspreyRouter, Promise, Validation, express, fs, path, url,
+  var DefaultParameters, ErrorHandler, Osprey, OspreyBase, Promise, express, fs, path, url,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -8,13 +8,9 @@
 
   path = require('path');
 
-  Validation = require('./middlewares/validation');
-
   DefaultParameters = require('./middlewares/default-parameters');
 
   ErrorHandler = require('./middlewares/error-handler');
-
-  OspreyRouter = require('./middlewares/router');
 
   OspreyBase = require('./osprey-base');
 
@@ -28,6 +24,7 @@
     __extends(Osprey, _super);
 
     function Osprey() {
+      this.describe = __bind(this.describe, this);
       this.registerConsole = __bind(this.registerConsole, this);
       this.register = __bind(this.register, this);
       return Osprey.__super__.constructor.apply(this, arguments);
@@ -36,23 +33,18 @@
     Osprey.prototype.register = function(uriTemplateReader, resources) {
       var middlewares;
       middlewares = [];
-      middlewares.push(DefaultParameters);
-      if (this.settings.enableValidations) {
-        middlewares.push(Validation);
-      }
-      middlewares.push(OspreyRouter);
       middlewares.push(ErrorHandler);
-      return this.registerMiddlewares(middlewares, this.apiPath, this.context, this.settings, resources, uriTemplateReader, this.logger);
+      return this.registerMiddlewares(middlewares, this.context, this.settings, resources, uriTemplateReader, this.logger);
     };
 
     Osprey.prototype.registerConsole = function() {
       if (this.settings.enableConsole) {
-        this.context.get(this.settings.consolePath, this.consoleHandler(this.apiPath, this.settings.consolePath));
-        this.context.get(url.resolve(this.settings.consolePath + '/', 'index.html'), this.consoleHandler(this.apiPath, this.settings.consolePath));
+        this.context.get(this.settings.consolePath, this.consoleHandler(this.context.route, this.settings.consolePath));
+        this.context.get(url.resolve(this.settings.consolePath + '/', 'index.html'), this.consoleHandler(this.context.route, this.settings.consolePath));
         this.context.use(this.settings.consolePath, express["static"](path.join(__dirname, 'assets/console')));
         this.context.get('/', this.ramlHandler(this.settings.ramlFile));
         this.context.use('/', express["static"](path.dirname(this.settings.ramlFile)));
-        return this.logger.info("Osprey::APIConsole has been initialized successfully listening at " + (this.apiPath + this.settings.consolePath));
+        return this.logger.info("Osprey::APIConsole has been initialized successfully listening at " + (this.context.route + this.settings.consolePath));
       }
     };
 
@@ -88,7 +80,7 @@
     Osprey.prototype.load = function(err, uriTemplateReader, resources) {
       if (err == null) {
         if ((this.apiDescriptor != null) && typeof this.apiDescriptor === 'function') {
-          this.apiDescriptor(this, this.container);
+          this.apiDescriptor(this.context);
         }
         return this.register(uriTemplateReader, resources);
       }
@@ -96,7 +88,11 @@
 
     Osprey.prototype.describe = function(descriptor) {
       this.apiDescriptor = descriptor;
-      return Promise.resolve(this.container);
+      return Promise.resolve(this.context.parent);
+    };
+
+    Osprey.prototype.mount = function(basePath, app) {
+      return app.use(basePath, this.context);
     };
 
     return Osprey;

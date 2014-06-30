@@ -1,6 +1,5 @@
 express = require 'express'
 path = require 'path'
-Validation = require './middlewares/validation'
 DefaultParameters = require './middlewares/default-parameters'
 ErrorHandler = require './middlewares/error-handler'
 OspreyBase = require './osprey-base'

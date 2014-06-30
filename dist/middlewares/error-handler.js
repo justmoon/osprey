@@ -4,9 +4,8 @@
   errorDefaultSettings = require('../error-default-settings');
 
   ErrorHandler = (function() {
-    function ErrorHandler(apiPath, context, settings, resources, uriTemplateReader, logger) {
+    function ErrorHandler(context, settings, resources, uriTemplateReader, logger) {
       var key, value, _ref;
-      this.apiPath = apiPath;
       this.context = context;
       this.settings = settings;
       this.resources = resources;

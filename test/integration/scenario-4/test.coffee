@@ -31,7 +31,7 @@ describe 'SCENARIO 4 - OVERWRITE RESOURCES + VALIDATIONS', ->
         )
 
   describe 'URI PARAMETER - VALIDATIONS', ->
-    it 'Should response 200 if the query parameter is valid', (done) ->
+    it 'Should response 200 if the uri parameter is valid', (done) ->
       request(apiPath)
         .get('/overwrite-validations/10')
         .set('Accept', 'application/json')
@@ -42,7 +42,7 @@ describe 'SCENARIO 4 - OVERWRITE RESOURCES + VALIDATIONS', ->
           done()
         )
 
-    it 'Should response 400 if the query parameter is invalid', (done) ->
+    it 'Should response 400 if the uri parameter is invalid', (done) ->
       request(apiPath)
         .get('/overwrite-validations/1')
         .set('Accept', 'application/json')
@@ -54,7 +54,7 @@ describe 'SCENARIO 4 - OVERWRITE RESOURCES + VALIDATIONS', ->
         )
 
   describe 'FORM PARAMETER - VALIDATIONS', ->
-    it 'Should response 200 if the query parameter is valid', (done) ->
+    it 'Should response 200 if the form parameter is valid', (done) ->
       request(apiPath)
         .post('/overwrite-validations')
         .set('Content-Type', 'application/x-www-form-urlencoded')
@@ -66,7 +66,7 @@ describe 'SCENARIO 4 - OVERWRITE RESOURCES + VALIDATIONS', ->
           done()
         )
 
-    it 'Should response 400 if the query parameter is invalid', (done) ->
+    it 'Should response 400 if the form parameter is invalid', (done) ->
       request(apiPath)
         .post('/overwrite-validations')
         .set('Content-Type', 'application/x-www-form-urlencoded')
@@ -78,7 +78,7 @@ describe 'SCENARIO 4 - OVERWRITE RESOURCES + VALIDATIONS', ->
         )
 
   describe 'HEADER - VALIDATIONS', ->
-    it 'Should response 400 if the query parameter is invalid', (done) ->
+    it 'Should response 400 if the header is invalid', (done) ->
       request(apiPath)
         .put('/overwrite-validations/10')
         .end((err, res) ->
@@ -136,4 +136,4 @@ describe 'SCENARIO 4 - OVERWRITE RESOURCES + VALIDATIONS', ->
           res.status.should.be.eql 400
 
           done()
-        )    
+        )

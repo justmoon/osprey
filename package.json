@@ -51,6 +51,8 @@
     "lodash": "^2.4.1",
     "moment": "2.6.0",
     "raml-parser": "~0.8.7",
+    "raml-sanitize": "0.0.3",
+    "raml-validate": "0.0.3",
     "winston": "~0.7.2"
   },
   "files": [

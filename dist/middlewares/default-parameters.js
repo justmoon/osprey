@@ -3,8 +3,7 @@
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   DefaultParameters = (function() {
-    function DefaultParameters(apiPath, context, settings, resources, uriTemplateReader, logger) {
-      this.apiPath = apiPath;
+    function DefaultParameters(context, settings, resources, uriTemplateReader, logger) {
       this.context = context;
       this.settings = settings;
       this.resources = resources;

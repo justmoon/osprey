@@ -5,12 +5,11 @@ UriTemplateReader = require './uri-template-reader'
 logger            = require './utils/logger'
 path              = require 'path'
 express           = require 'express'
+
 conneg            = require './routers/conneg'
 mocks             = require './routers/mocks'
-
-# TODO: Refactor
-Middleware        = require './middlewares/validation'
 validation        = require './routers/validation'
+
 # TODO: Refactor
 dpMiddleware      = require './middlewares/default-parameters'
 dp                = require './routers/default-parameters'
@@ -28,19 +27,18 @@ exports.create = (settings) ->
     resources = wrapper.getResources()
     uriTemplateReader = new UriTemplateReader wrapper.getUriTemplates()
 
-    # Loading validations handler
+    # Loading conneg handler
+    conneg wrapper, ospreyApp
+
+    # Loading validations handlers
     if settings.enableValidations
-      middleware = new Middleware(null, null, wrapper.getResources(), uriTemplateReader, logger)
-      validation wrapper, ospreyApp, middleware
+      validation wrapper, ospreyApp
 
     # Loading defaul parameters handler
     middleware = new dpMiddleware(null, null, wrapper.getResources(), uriTemplateReader, logger)
     dp wrapper, ospreyApp, middleware
 
-    # Loading conneg handler
-    conneg wrapper, ospreyApp
-
-    # Loading mocks handler
+    # Loading mocks handlers
     if settings.enableMocks
       mocks wrapper, ospreyApp
 

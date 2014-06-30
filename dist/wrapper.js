@@ -1,8 +1,10 @@
 (function() {
-  var ParserWrapper, clone, extend, ramlLoader, ramlParser,
+  var ParserWrapper, clone, extend, ramlLoader, ramlParser, _,
     __slice = [].slice;
 
   ramlParser = require('raml-parser');
+
+  _ = require('lodash');
 
   extend = function() {
     var dest, key, source, sources, value, _i, _len;
@@ -39,6 +41,34 @@
         });
       }
       return templates;
+    };
+
+    ParserWrapper.prototype.getUriTemplatesByHttpMethod = function() {
+      var templates;
+      templates = {};
+      _.forOwn(this.resources, function(value, key) {
+        return _.forEach(value.methods, function(method) {
+          if (templates[method.method] == null) {
+            templates[method.method] = [];
+          }
+          return templates[method.method].push(key);
+        });
+      });
+      return templates;
+    };
+
+    ParserWrapper.prototype.getMethodInfo = function(httpMethod, uriTemplate) {
+      var methodInfo, _ref;
+      if (((_ref = this.resources[uriTemplate]) != null ? _ref.methods : void 0) != null) {
+        methodInfo = this.resources[uriTemplate].methods.filter(function(method) {
+          return method.method === httpMethod;
+        });
+      }
+      if ((methodInfo != null) && methodInfo.length) {
+        return methodInfo[0];
+      } else {
+        return null;
+      }
     };
 
     ParserWrapper.prototype.getResourcesList = function() {

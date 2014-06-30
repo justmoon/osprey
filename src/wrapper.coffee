@@ -33,7 +33,7 @@ class ParserWrapper
         unless templates[method.method]?
           templates[method.method] = []
 
-        templates[method.method].push(key);
+        templates[method.method].push(key)
 
     templates
 
