@@ -7,7 +7,8 @@ UriTemplateReader = require '../../../../src/uri-template-reader'
 
 describe 'OSPREY VALIDATIONS - QUERY PARAMETER - TYPE - NUMBER', =>
   before () =>
-    parser.loadRaml "./test/assets/validations.query-parameters.raml", new Logger, (wrapper) =>
+    parser.loadRaml("./test/assets/validations.query-parameters.raml", new Logger)
+    .then (wrapper) =>
       @resources = wrapper.getResources()
       templates = wrapper.getUriTemplates()
       @uriTemplateReader = new UriTemplateReader templates

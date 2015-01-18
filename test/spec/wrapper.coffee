@@ -4,7 +4,8 @@ Logger = require '../mocks/logger'
 
 describe 'WRAPPER', ->
   before () ->
-    parser.loadRaml './test/assets/well-formed.raml', new Logger, (wrapper) =>
+    parser.loadRaml('./test/assets/well-formed.raml', new Logger)
+    .then (wrapper) =>
       @parsedRaml = wrapper
 
   it 'Should contain at least base properties: title,version,baseUri', ()->

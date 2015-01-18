@@ -7,7 +7,8 @@ DefaultParameters = require '../../src/middlewares/default-parameters'
 
 describe 'OSPREY DEFAULT PARAMETERS', =>
   before () =>
-    parser.loadRaml "./test/assets/default-parameters.raml", new Logger, (wrapper) =>
+    parser.loadRaml("./test/assets/default-parameters.raml", new Logger)
+    .then (wrapper) =>
       @resources = wrapper.getResources()
       templates = wrapper.getUriTemplates()
       @uriTemplateReader = new UriTemplateReader templates

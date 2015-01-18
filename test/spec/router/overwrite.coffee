@@ -10,7 +10,8 @@ Logger = require '../../mocks/logger'
 
 describe 'OSPREY ROUTER - OVERWRITE', =>
   before () =>
-    parser.loadRaml "./test/assets/well-formed.raml", new Logger, (wrapper) =>
+    parser.loadRaml("./test/assets/well-formed.raml", new Logger)
+    .then (wrapper) =>
       @resources = wrapper.getResources()
       templates = wrapper.getUriTemplates()
       @uriTemplateReader = new UriTemplateReader templates

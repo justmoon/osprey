@@ -5,7 +5,8 @@ Logger = require '../mocks/logger'
 
 describe 'URI TEMPLATE READER', ->
   before () ->
-    parser.loadRaml './test/assets/well-formed.raml', new Logger, (wrapper) =>
+    parser.loadRaml('./test/assets/well-formed.raml', new Logger)
+    .then (wrapper) =>
       @uriTemplates = wrapper.getUriTemplates()
 
   it 'Should correctly generate uri matchers', () ->

@@ -8,7 +8,8 @@ Logger = require '../../mocks/logger'
 
 describe 'OSPREY - OVERWRITE', =>
   before () =>
-    parser.loadRaml "./test/assets/well-formed.raml", new Logger, (wrapper) =>
+    parser.loadRaml("./test/assets/well-formed.raml", new Logger)
+    .then (wrapper) =>
       @resources = wrapper.getResources()
       templates = wrapper.getUriTemplates()
       @uriTemplateReader = new UriTemplateReader templates
@@ -20,7 +21,8 @@ describe 'OSPREY - OVERWRITE', =>
 
     osprey.get '/resource', (req, res) ->
 
-    parser.loadRaml "./test/assets/well-formed.raml", new Logger, (wrapper) =>
+    parser.loadRaml("./test/assets/well-formed.raml", new Logger)
+    .then (wrapper) =>
       uriTemplateReader = new UriTemplateReader wrapper.getUriTemplates()
 
       # Act
@@ -37,7 +39,8 @@ describe 'OSPREY - OVERWRITE', =>
 
     osprey.post '/resource', (req, res) ->
 
-    parser.loadRaml "./test/assets/well-formed.raml", new Logger, (wrapper) =>
+    parser.loadRaml("./test/assets/well-formed.raml", new Logger)
+    .then (wrapper) =>
       uriTemplateReader = new UriTemplateReader wrapper.getUriTemplates()
 
       # Act
@@ -54,7 +57,8 @@ describe 'OSPREY - OVERWRITE', =>
 
     osprey.put '/resource', (req, res) ->
 
-    parser.loadRaml "./test/assets/well-formed.raml", new Logger, (wrapper) =>
+    parser.loadRaml("./test/assets/well-formed.raml", new Logger)
+    .then (wrapper) =>
       uriTemplateReader = new UriTemplateReader wrapper.getUriTemplates()
 
       # Act
@@ -71,7 +75,8 @@ describe 'OSPREY - OVERWRITE', =>
 
     osprey.delete '/resource', (req, res) ->
 
-    parser.loadRaml "./test/assets/well-formed.raml", new Logger, (wrapper) =>
+    parser.loadRaml("./test/assets/well-formed.raml", new Logger)
+    .then (wrapper) =>
       uriTemplateReader = new UriTemplateReader wrapper.getUriTemplates()
 
       # Act
@@ -88,7 +93,8 @@ describe 'OSPREY - OVERWRITE', =>
 
     osprey.head '/resource', (req, res) ->
 
-    parser.loadRaml "./test/assets/well-formed.raml", new Logger, (wrapper) =>
+    parser.loadRaml("./test/assets/well-formed.raml", new Logger)
+    .then (wrapper) =>
       uriTemplateReader = new UriTemplateReader wrapper.getUriTemplates()
 
       # Act
@@ -105,7 +111,8 @@ describe 'OSPREY - OVERWRITE', =>
 
     osprey.patch '/resource', (req, res) ->
 
-    parser.loadRaml "./test/assets/well-formed.raml", new Logger, (wrapper) =>
+    parser.loadRaml("./test/assets/well-formed.raml", new Logger)
+    .then (wrapper) =>
       uriTemplateReader = new UriTemplateReader wrapper.getUriTemplates()
 
       # Act
