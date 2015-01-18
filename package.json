@@ -44,7 +44,7 @@
   },
   "dependencies": {
     "raml-parser": "~0.8.7",
-    "jsonschema": "0.4.0",
+    "jsonschema": "1.0.0",
     "express": "3.7.0",
     "winston": "~0.7.2",
     "colors": "~0.6.2",
