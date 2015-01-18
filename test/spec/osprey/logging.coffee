@@ -19,7 +19,7 @@ describe 'OSPREY - LOGGING', =>
     osprey = new Osprey '/api', new Express, {}, logger
 
     # Act
-    osprey.register @uriTemplateReader, @resources
+    osprey.register @uriTemplateReader, @resources, {}
     osprey.registerConsole()
 
     # Assert

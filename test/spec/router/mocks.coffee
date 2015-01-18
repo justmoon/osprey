@@ -20,7 +20,7 @@ describe 'OSPREY ROUTER - MOCKS', =>
     context = new Express
     res = new Response
     req = new Request 'GET', '/api/resource'
-    router = new OspreyRouter '/api', context, {}, @resources, @uriTemplateReader, new Logger
+    router = new OspreyRouter '/api', context, {}, @resources, {}, @uriTemplateReader, new Logger
 
     # Act
     router.resolveMock req, res, null, true
@@ -33,7 +33,7 @@ describe 'OSPREY ROUTER - MOCKS', =>
     context = new Express
     res = new Response
     req = new Request 'GET', '/api/resource/1'
-    router = new OspreyRouter '/api', context, {}, @resources, @uriTemplateReader, new Logger
+    router = new OspreyRouter '/api', context, {}, @resources, {}, @uriTemplateReader, new Logger
 
     # Act
     router.resolveMock req, res, null, true
@@ -49,7 +49,7 @@ describe 'OSPREY ROUTER - MOCKS', =>
     res = new Response
     req = new Request 'GET', '/api/resource'
     middleware = new Middleware(0)
-    router = new OspreyRouter '/api', context, {}, @resources, @uriTemplateReader, new Logger
+    router = new OspreyRouter '/api', context, {}, @resources, {}, @uriTemplateReader, new Logger
 
     # Act
     router.resolveMock req, res, middleware.next, false

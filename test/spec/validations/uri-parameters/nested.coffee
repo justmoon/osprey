@@ -16,7 +16,7 @@ describe 'OSPREY VALIDATIONS - NESTED PARAMETERS', =>
     # Arrange
     resource = @resources['/nested/:first']
     req = new Request 'GET', '/api/nested/abc'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     # Assert
     ( ->
@@ -27,7 +27,7 @@ describe 'OSPREY VALIDATIONS - NESTED PARAMETERS', =>
     # Arrange
     resource = @resources['/nested/:first/:second']
     req = new Request 'GET', '/api/nested/abc/10'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     # Assert
     ( ->
@@ -38,7 +38,7 @@ describe 'OSPREY VALIDATIONS - NESTED PARAMETERS', =>
     # Arrange
     resource = @resources['/nested/:first/:second']
     req = new Request 'GET', '/api/nested/abcde/abc'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     # Assert
     ( ->
@@ -49,7 +49,7 @@ describe 'OSPREY VALIDATIONS - NESTED PARAMETERS', =>
     # Arrange
     resource = @resources['/nested/:first/:second']
     req = new Request 'GET', '/api/nested/abcde/15'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     # Assert
     ( ->

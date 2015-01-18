@@ -1,5 +1,5 @@
 class DefaultParameters
-  constructor: (@apiPath, @context, @settings, @resources, @uriTemplateReader, @logger) ->
+  constructor: (@apiPath, @context, @settings, @resources, @schemas, @uriTemplateReader, @logger) ->
     @logger.info 'Osprey::DefaultParameters has been initialized successfully'
 
   exec: (req, res, next) =>
@@ -10,7 +10,7 @@ class DefaultParameters
       uri = urlPath[1].split('?')[0]
 
       template = @uriTemplateReader.getTemplateFor(uri)
-      
+
       if template?
         resource = @resources[template.uriTemplate]
 

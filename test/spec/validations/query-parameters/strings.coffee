@@ -16,7 +16,7 @@ describe 'OSPREY VALIDATIONS - QUERY PARAMETER - TYPE - STRING', =>
     # Arrange
     resource = @resources['/string']
     req = new Request 'GET', '/api/string'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     req.addQueryParameter 'param', 'aaa'
 
@@ -29,7 +29,7 @@ describe 'OSPREY VALIDATIONS - QUERY PARAMETER - TYPE - STRING', =>
     # Arrange
     resource = @resources['/string']
     req = new Request 'GET', '/api/string'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     # Assert
     ( ->
@@ -40,7 +40,7 @@ describe 'OSPREY VALIDATIONS - QUERY PARAMETER - TYPE - STRING', =>
     # Arrange
     resource = @resources['/string']
     req = new Request 'GET', '/api/string'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     req.addQueryParameter 'param', '111'
 
@@ -53,7 +53,7 @@ describe 'OSPREY VALIDATIONS - QUERY PARAMETER - TYPE - STRING', =>
     # Arrange
     resource = @resources['/string']
     req = new Request 'GET', '/api/string'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     req.addQueryParameter 'param', '1'
 
@@ -66,7 +66,7 @@ describe 'OSPREY VALIDATIONS - QUERY PARAMETER - TYPE - STRING', =>
     # Arrange
     resource = @resources['/string']
     req = new Request 'GET', '/api/string'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     req.addQueryParameter 'param', '111'
 
@@ -79,7 +79,7 @@ describe 'OSPREY VALIDATIONS - QUERY PARAMETER - TYPE - STRING', =>
     # Arrange
     resource = @resources['/string']
     req = new Request 'GET', '/api/string'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     req.addQueryParameter 'param', '1111'
 
@@ -92,7 +92,7 @@ describe 'OSPREY VALIDATIONS - QUERY PARAMETER - TYPE - STRING', =>
     # Arrange
     resource = @resources['/string/enum']
     req = new Request 'integer', '/api/string/enum'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     req.addQueryParameter 'param', 'AAA'
 
@@ -105,7 +105,7 @@ describe 'OSPREY VALIDATIONS - QUERY PARAMETER - TYPE - STRING', =>
     # Arrange
     resource = @resources['/string/enum']
     req = new Request 'GET', '/api/string/enum'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     req.addQueryParameter 'param', '1'
 
@@ -118,7 +118,7 @@ describe 'OSPREY VALIDATIONS - QUERY PARAMETER - TYPE - STRING', =>
     # Arrange
     resource = @resources['/string/enum']
     req = new Request 'integer', '/api/string/enum'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     # Assert
     ( ->
@@ -129,7 +129,7 @@ describe 'OSPREY VALIDATIONS - QUERY PARAMETER - TYPE - STRING', =>
     # Arrange
     resource = @resources['/string/pattern']
     req = new Request 'GET', '/api/string/pattern'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     req.addQueryParameter 'param', 'a'
 
@@ -142,7 +142,7 @@ describe 'OSPREY VALIDATIONS - QUERY PARAMETER - TYPE - STRING', =>
     # Arrange
     resource = @resources['/string/pattern']
     req = new Request 'GET', '/api/string/pattern'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     req.addQueryParameter 'param', '1'
 
@@ -155,7 +155,7 @@ describe 'OSPREY VALIDATIONS - QUERY PARAMETER - TYPE - STRING', =>
     # Arrange
     resource = @resources['/string/pattern']
     req = new Request 'integer', '/api/string/pattern'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     # Assert
     ( ->
@@ -166,7 +166,7 @@ describe 'OSPREY VALIDATIONS - QUERY PARAMETER - TYPE - STRING', =>
     # Arrange
     resource = @resources['/string/empty']
     req = new Request 'GET', '/api/string/empty'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     req.addQueryParameter 'param', ''
 

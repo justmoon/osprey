@@ -19,7 +19,7 @@ describe 'OSPREY ROUTER - LOGGING', =>
     # Arrange
     context = new Express
     logger = new Logger
-    router = new OspreyRouter '/api', context, {}, @resources, @uriTemplateReader, logger
+    router = new OspreyRouter '/api', context, {}, @resources, {}, @uriTemplateReader, logger
 
     # Act
     router.resolveMethod method: 'get', template: '/resource', handler: () ->
@@ -31,7 +31,7 @@ describe 'OSPREY ROUTER - LOGGING', =>
     # Arrange
     context = new Express
     logger = new Logger
-    router = new OspreyRouter '/api', context, {}, @resources, @uriTemplateReader, logger
+    router = new OspreyRouter '/api', context, {}, @resources, {}, @uriTemplateReader, logger
 
     # Act
     router.resolveMethod method: 'get', template: '/no-existing', handler: () ->

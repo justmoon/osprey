@@ -16,7 +16,7 @@ describe 'OSPREY DEFAULT PARAMETERS', =>
     it 'Should add a query param to the request if it is not present', () =>
       # Arrange
       req = new Request 'GET', '/api/resources'
-      middleware = new DefaultParameters '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+      middleware = new DefaultParameters '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
       # Act
       middleware.exec(req, {}, ()-> )
@@ -27,7 +27,7 @@ describe 'OSPREY DEFAULT PARAMETERS', =>
     it 'Should use the assigned value', () =>
       # Arrange
       req = new Request 'GET', '/api/resources?param=CUSTOM'
-      middleware = new DefaultParameters '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+      middleware = new DefaultParameters '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
       # Act
       req.addQueryParameter 'param', 'CUSTOM'
@@ -40,7 +40,7 @@ describe 'OSPREY DEFAULT PARAMETERS', =>
     it 'Should add a form parameter to the request if it is not present', () =>
       # Arrange
       req = new Request 'POST', '/api/resources'
-      middleware = new DefaultParameters '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+      middleware = new DefaultParameters '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
       # Act
       req.addHeader 'content-type', 'application/x-www-form-urlencoded'
@@ -52,7 +52,7 @@ describe 'OSPREY DEFAULT PARAMETERS', =>
     it 'Should use the assigned value', () =>
       # Arrange
       req = new Request 'POST', '/api/resources'
-      middleware = new DefaultParameters '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+      middleware = new DefaultParameters '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
       # Act
       req.addHeader 'content-type', 'application/x-www-form-urlencoded'
@@ -66,7 +66,7 @@ describe 'OSPREY DEFAULT PARAMETERS', =>
     it 'Should add a header to the request if it is not present', () =>
       # Arrange
       req = new Request 'GET', '/api/resources'
-      middleware = new DefaultParameters '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+      middleware = new DefaultParameters '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
       # Act
       middleware.exec(req, {}, ()-> )
@@ -77,7 +77,7 @@ describe 'OSPREY DEFAULT PARAMETERS', =>
     it 'Should use the assigned value', () =>
       # Arrange
       req = new Request 'GET', '/api/resources'
-      middleware = new DefaultParameters '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+      middleware = new DefaultParameters '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
       # Act
       req.addHeader 'header', 'CUSTOM'

@@ -1,7 +1,7 @@
 errorDefaultSettings = require '../error-default-settings'
 
 class ErrorHandler
-  constructor: (@apiPath, @context, @settings, @resources, @uriTemplateReader, @logger) ->
+  constructor: (@apiPath, @context, @settings, @resources, @schemas, @uriTemplateReader, @logger) ->
     @logger.info 'Osprey::ExceptionHandler has been initialized successfully'
 
     for key,value of settings.exceptionHandler

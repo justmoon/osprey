@@ -10,7 +10,7 @@ url = require 'url'
 Promise = require 'bluebird'
 
 class Osprey extends OspreyBase
-  register: (uriTemplateReader, resources) =>
+  register: (uriTemplateReader, resources, schemas) =>
     middlewares = []
 
     middlewares.push DefaultParameters
@@ -21,7 +21,7 @@ class Osprey extends OspreyBase
     middlewares.push OspreyRouter
     middlewares.push ErrorHandler
 
-    @registerMiddlewares middlewares, @apiPath, @context, @settings, resources, uriTemplateReader, @logger
+    @registerMiddlewares middlewares, @apiPath, @context, @settings, resources, schemas, uriTemplateReader, @logger
 
   registerConsole: () =>
     if @settings.enableConsole
@@ -59,12 +59,12 @@ class Osprey extends OspreyBase
       else
         res.send 406
 
-  load: (err, uriTemplateReader, resources) ->
+  load: (err, uriTemplateReader, resources, schemas) ->
     unless err?
       if @apiDescriptor? and typeof @apiDescriptor == 'function'
         @apiDescriptor this, @context
 
-      @register(uriTemplateReader, resources)
+      @register(uriTemplateReader, resources, schemas)
 
   describe: (descriptor) ->
     @apiDescriptor = descriptor

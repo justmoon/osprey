@@ -12,7 +12,9 @@ class ParserWrapper
   constructor: (data) ->
     @raml = data
     @resources = {}
+    @schemas = {}
     @_generateResources()
+    @_generateSchemas()
 
   getResources: ->
     @resources
@@ -32,6 +34,9 @@ class ParserWrapper
       resourceCopy.uri = key
       resourceList.push resourceCopy
     resourceList
+
+  getSchemas: ->
+    @schemas
 
   getProtocols: ->
     @raml.protocols
@@ -63,6 +68,15 @@ class ParserWrapper
     resourceMap[uriKey] = clone resource
     delete resourceMap[uriKey].relativeUri
     delete resourceMap[uriKey]?.resources
+
+  _generateSchemas: ->
+    if @raml.schemas?
+      for schema in @raml.schemas
+        @_processSchema schema, @schemas
+
+  _processSchema: (schema, schemaMap) ->
+    for schemaId of schema
+      schemaMap[schemaId] = schema[schemaId]
 
 clone = (obj) ->
   if not obj? or typeof obj isnt 'object'

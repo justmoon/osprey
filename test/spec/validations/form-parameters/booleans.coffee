@@ -16,7 +16,7 @@ describe 'OSPREY VALIDATIONS - FORM PARAMETER - TYPE - BOOLEAN', =>
     # Arrange
     resource = @resources['/boolean']
     req = new Request 'POST', '/api/boolean'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/x-www-form-urlencoded'
     req.addBodyParameter 'param', 'true'
@@ -30,7 +30,7 @@ describe 'OSPREY VALIDATIONS - FORM PARAMETER - TYPE - BOOLEAN', =>
     # Arrange
     resource = @resources['/boolean']
     req = new Request 'POST', '/api/boolean'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/x-www-form-urlencoded'
 
@@ -43,7 +43,7 @@ describe 'OSPREY VALIDATIONS - FORM PARAMETER - TYPE - BOOLEAN', =>
     # Arrange
     resource = @resources['/boolean']
     req = new Request 'POST', '/api/boolean'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/x-www-form-urlencoded'
     req.addBodyParameter 'param', 'aa'
@@ -57,7 +57,7 @@ describe 'OSPREY VALIDATIONS - FORM PARAMETER - TYPE - BOOLEAN', =>
     # Arrange
     resource = @resources['/boolean']
     req = new Request 'POST', '/api/boolean'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/x-www-form-urlencoded'
     req.addBodyParameter 'param', 'true'

@@ -19,7 +19,7 @@ describe 'OSPREY - SETTINGS', =>
     osprey = new Osprey '/api', context, {}, new Logger
 
     # Act
-    osprey.register @uriTemplateReader, @resources
+    osprey.register @uriTemplateReader, @resources, {}
 
     # Assert
     context.middlewares.should.have.lengthOf 4
@@ -32,7 +32,7 @@ describe 'OSPREY - SETTINGS', =>
     }, new Logger
 
     # Act
-    osprey.register @uriTemplateReader, @resources
+    osprey.register @uriTemplateReader, @resources, {}
 
     # Assert
     context.middlewares.should.have.lengthOf 3
@@ -57,7 +57,7 @@ describe 'OSPREY - SETTINGS', =>
     osprey = new Osprey '/api', context, null, new Logger
 
     # Act
-    osprey.register @uriTemplateReader, @resources
+    osprey.register @uriTemplateReader, @resources, {}
 
     # Assert
     context.middlewares.should.have.lengthOf 4
@@ -68,7 +68,7 @@ describe 'OSPREY - SETTINGS', =>
     osprey = new Osprey '/api', context, undefined, new Logger
 
     # Act
-    osprey.register @uriTemplateReader, @resources
+    osprey.register @uriTemplateReader, @resources, {}
 
     # Assert
     context.middlewares.should.have.lengthOf 4

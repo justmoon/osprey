@@ -12,9 +12,9 @@ class OspreyBase
     @settings.enableConsole = true unless @settings.enableConsole?
     @settings.consolePath = "/console" unless @settings.consolePath
 
-  registerMiddlewares: (middlewares, apiPath, context, settings, resources, uriTemplateReader, logger) ->
+  registerMiddlewares: (middlewares, apiPath, context, settings, resources, schemas, uriTemplateReader, logger) ->
     for middleware in middlewares
-      temp = new middleware apiPath, context, settings, resources, uriTemplateReader, logger
+      temp = new middleware apiPath, context, settings, resources, schemas, uriTemplateReader, logger
       @context.use temp.exec
 
   get: (uriTemplate, handler) =>

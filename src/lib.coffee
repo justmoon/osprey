@@ -16,9 +16,10 @@ exports.create = (apiPath, context, settings) ->
   parser.loadRaml(settings.ramlFile, logger)
     .then((wrapper) ->
       resources = wrapper.getResources()
+      schemas = wrapper.getSchemas()
       uriTemplateReader = new UriTemplateReader wrapper.getUriTemplates()
 
-      osprey.load null, uriTemplateReader, resources
+      osprey.load null, uriTemplateReader, resources, schemas
 
       # Register the console after Osprey has been loaded, since Osprey is
       # attached asynchronously after RAML is parsed. The first call to any

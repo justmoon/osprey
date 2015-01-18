@@ -16,7 +16,7 @@ describe 'OSPREY VALIDATIONS - URI PARAMETER - TYPE - BOOLEAN', =>
     # Arrange
     resource = @resources['/boolean/:id']
     req = new Request 'GET', '/api/boolean/aa'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/json'
 
@@ -29,7 +29,7 @@ describe 'OSPREY VALIDATIONS - URI PARAMETER - TYPE - BOOLEAN', =>
     # Arrange
     resource = @resources['/boolean/:id']
     req = new Request 'GET', '/api/boolean/true'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/json'
 

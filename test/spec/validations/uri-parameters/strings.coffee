@@ -16,7 +16,7 @@ describe 'OSPREY VALIDATIONS - URI PARAMETER - TYPE - STRING', =>
     # Arrange
     resource = @resources['/string/:id']
     req = new Request 'GET', '/api/string/111'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/json'
 
@@ -29,7 +29,7 @@ describe 'OSPREY VALIDATIONS - URI PARAMETER - TYPE - STRING', =>
     # Arrange
     resource = @resources['/string/:id']
     req = new Request 'GET', '/api/string/1'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     # Assert
     ( ->
@@ -40,7 +40,7 @@ describe 'OSPREY VALIDATIONS - URI PARAMETER - TYPE - STRING', =>
     # Arrange
     resource = @resources['/string/:id']
     req = new Request 'GET', '/api/string/111'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/json'
 
@@ -53,7 +53,7 @@ describe 'OSPREY VALIDATIONS - URI PARAMETER - TYPE - STRING', =>
     # Arrange
     resource = @resources['/string/:id']
     req = new Request 'GET', '/api/string/1111'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     # Assert
     ( ->
@@ -64,7 +64,7 @@ describe 'OSPREY VALIDATIONS - URI PARAMETER - TYPE - STRING', =>
     # Arrange
     resource = @resources['/string/enum/:id']
     req = new Request 'GET', '/api/string/enum/AAA'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     # Assert
     ( ->
@@ -75,7 +75,7 @@ describe 'OSPREY VALIDATIONS - URI PARAMETER - TYPE - STRING', =>
     # Arrange
     resource = @resources['/string/enum/:id']
     req = new Request 'GET', '/api/string/enum/1'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     # Assert
     ( ->
@@ -86,7 +86,7 @@ describe 'OSPREY VALIDATIONS - URI PARAMETER - TYPE - STRING', =>
     # Arrange
     resource = @resources['/string/pattern/:id']
     req = new Request 'GET', '/api/string/pattern/a'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     # Assert
     ( ->
@@ -97,10 +97,9 @@ describe 'OSPREY VALIDATIONS - URI PARAMETER - TYPE - STRING', =>
     # Arrange
     resource = @resources['/string/pattern/:id']
     req = new Request 'GET', '/api/string/pattern/1'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     # Assert
     ( ->
       validation.validateRequest resource, req
     ).should.throw()
-

@@ -16,7 +16,7 @@ describe 'OSPREY VALIDATIONS - QUERY PARAMETER - TYPE - BOOLEAN', =>
     # Arrange
     resource = @resources['/boolean']
     req = new Request 'GET', '/api/boolean'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     req.addQueryParameter 'param', 'true'
 
@@ -29,7 +29,7 @@ describe 'OSPREY VALIDATIONS - QUERY PARAMETER - TYPE - BOOLEAN', =>
     # Arrange
     resource = @resources['/boolean']
     req = new Request 'GET', '/api/boolean'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     # Assert
     ( ->
@@ -40,7 +40,7 @@ describe 'OSPREY VALIDATIONS - QUERY PARAMETER - TYPE - BOOLEAN', =>
     # Arrange
     resource = @resources['/boolean']
     req = new Request 'GET', '/api/boolean'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     req.addQueryParameter 'param', ''
 
@@ -53,7 +53,7 @@ describe 'OSPREY VALIDATIONS - QUERY PARAMETER - TYPE - BOOLEAN', =>
     # Arrange
     resource = @resources['/boolean']
     req = new Request 'GET', '/api/boolean'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     req.addQueryParameter 'param', 'aa'
 

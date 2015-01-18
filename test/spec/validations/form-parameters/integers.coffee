@@ -16,7 +16,7 @@ describe 'OSPREY VALIDATIONS - FORM PARAMETER - TYPE - INTEGER', =>
     # Arrange
     resource = @resources['/integer']
     req = new Request 'POST', '/api/integer'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/x-www-form-urlencoded'
     req.addBodyParameter 'param', '10'
@@ -30,7 +30,7 @@ describe 'OSPREY VALIDATIONS - FORM PARAMETER - TYPE - INTEGER', =>
     # Arrange
     resource = @resources['/integer']
     req = new Request 'POST', '/api/integer'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/x-www-form-urlencoded'
 
@@ -43,7 +43,7 @@ describe 'OSPREY VALIDATIONS - FORM PARAMETER - TYPE - INTEGER', =>
     # Arrange
     resource = @resources['/integer']
     req = new Request 'POST', '/api/integer'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/x-www-form-urlencoded'
     req.addBodyParameter 'param', 'aa'
@@ -57,7 +57,7 @@ describe 'OSPREY VALIDATIONS - FORM PARAMETER - TYPE - INTEGER', =>
     # Arrange
     resource = @resources['/integer']
     req = new Request 'POST', '/api/integer'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/x-www-form-urlencoded'
     req.addBodyParameter 'param', '10'
@@ -71,7 +71,7 @@ describe 'OSPREY VALIDATIONS - FORM PARAMETER - TYPE - INTEGER', =>
     # Arrange
     resource = @resources['/integer']
     req = new Request 'POST', '/api/integer'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/x-www-form-urlencoded'
     req.addBodyParameter 'param', '10'
@@ -85,7 +85,7 @@ describe 'OSPREY VALIDATIONS - FORM PARAMETER - TYPE - INTEGER', =>
     # Arrange
     resource = @resources['/integer']
     req = new Request 'POST', '/api/integer'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/x-www-form-urlencoded'
     req.addBodyParameter 'param', '1'
@@ -99,7 +99,7 @@ describe 'OSPREY VALIDATIONS - FORM PARAMETER - TYPE - INTEGER', =>
     # Arrange
     resource = @resources['/integer']
     req = new Request 'POST', '/api/integer'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/x-www-form-urlencoded'
     req.addBodyParameter 'param', '10'
@@ -113,7 +113,7 @@ describe 'OSPREY VALIDATIONS - FORM PARAMETER - TYPE - INTEGER', =>
     # Arrange
     resource = @resources['/integer']
     req = new Request 'POST', '/api/integer'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/x-www-form-urlencoded'
     req.addBodyParameter 'param', '11'

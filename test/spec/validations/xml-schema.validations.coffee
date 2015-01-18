@@ -16,7 +16,7 @@ describe 'OSPREY VALIDATIONS - XML SCHEMA', =>
     # Arrange
     resource = @resources['/resources']
     req = new Request 'POST', '/api/resources'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/xml'
     req.addBody '<?xml version="1.0" ?><league><name>test</name></league>'
@@ -30,7 +30,7 @@ describe 'OSPREY VALIDATIONS - XML SCHEMA', =>
     # Arrange
     resource = @resources['/resources']
     req = new Request 'POST', '/api/resources'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'text/xml'
     req.addBody '<?xml version="1.0" ?><league><name>test</name></league>'
@@ -44,7 +44,7 @@ describe 'OSPREY VALIDATIONS - XML SCHEMA', =>
     # Arrange
     resource = @resources['/resources']
     req = new Request 'POST', '/api/resources'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/test+xml'
     req.addBody '<?xml version="1.0" ?><league><name>test</name></league>'
@@ -58,7 +58,7 @@ describe 'OSPREY VALIDATIONS - XML SCHEMA', =>
     # Arrange
     resource = @resources['/resources']
     req = new Request 'POST', '/api/resources'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/xml'
     req.addBody '<?xml version="1.0" ?><league></league>'
@@ -72,7 +72,7 @@ describe 'OSPREY VALIDATIONS - XML SCHEMA', =>
     # Arrange
     resource = @resources['/resources']
     req = new Request 'POST', '/api/resources'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/xml'
 
@@ -85,7 +85,7 @@ describe 'OSPREY VALIDATIONS - XML SCHEMA', =>
     # Arrange
     resource = @resources['/resources']
     req = new Request 'POST', '/api/resources'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'text/plain'
 

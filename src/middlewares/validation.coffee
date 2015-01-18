@@ -8,7 +8,7 @@ libxml = require 'libxmljs'
 Validators = require './validators'
 
 class Validation
-  constructor: (@apiPath, @context, @settings, @resources, @uriTemplateReader, @logger) ->
+  constructor: (@apiPath, @context, @settings, @resources, @schemas, @uriTemplateReader, @logger) ->
     @logger.info 'Osprey::Validations has been initialized successfully'
 
   exec: (req, res, next) =>
@@ -56,6 +56,8 @@ class Validation
   validateSchema: (method, req) =>
     if method.body?
       contentType = method.body[req?.headers?['content-type']?.split(/;/)?[0]]
+
+      console.log contentType
 
       if contentType?.schema?
         if @isJson req

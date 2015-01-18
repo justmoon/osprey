@@ -18,7 +18,7 @@ describe 'OSPREY ROUTER', =>
   it 'Should return false if the resource was not registered on express', () =>
     # Arrange
     context = new Express
-    router = new OspreyRouter '/api', context, {}, @resources, @uriTemplateReader, new Logger
+    router = new OspreyRouter '/api', context, {}, @resources, {}, @uriTemplateReader, new Logger
 
     # Act
     result = router.routerExists 'GET', '/resource'
@@ -35,7 +35,7 @@ describe 'OSPREY ROUTER', =>
         regexp: /^\/resource\/?$/i
       ]
 
-    router = new OspreyRouter '/api', context, {}, @resources, @uriTemplateReader, new Logger
+    router = new OspreyRouter '/api', context, {}, @resources, {}, @uriTemplateReader, new Logger
 
     # Act
     result = router.routerExists 'GET', '/resource'
@@ -52,11 +52,10 @@ describe 'OSPREY ROUTER', =>
         regexp:  /^\/resource\/(?:([^\/]+?))\/?$/i
       ]
 
-    router = new OspreyRouter '/api', context, {}, @resources, @uriTemplateReader, new Logger
+    router = new OspreyRouter '/api', context, {}, @resources, {}, @uriTemplateReader, new Logger
 
     # Act
     result = router.routerExists 'GET', '/resource/1'
 
     # Assert
     result.should.be.eql true
-

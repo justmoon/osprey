@@ -16,7 +16,7 @@ describe 'OSPREY VALIDATIONS - FORM PARAMETER - TYPE - DATE', =>
     # Arrange
     resource = @resources['/date']
     req = new Request 'POST', '/api/date'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/x-www-form-urlencoded'
     req.addBodyParameter 'param', 'Sun, 06 Nov 1994 08:49:37 GMT'
@@ -30,7 +30,7 @@ describe 'OSPREY VALIDATIONS - FORM PARAMETER - TYPE - DATE', =>
     # Arrange
     resource = @resources['/date']
     req = new Request 'POST', '/api/date'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/x-www-form-urlencoded'
 
@@ -43,7 +43,7 @@ describe 'OSPREY VALIDATIONS - FORM PARAMETER - TYPE - DATE', =>
     # Arrange
     resource = @resources['/date']
     req = new Request 'POST', '/api/date'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/x-www-form-urlencoded'
     req.addBodyParameter 'param', ''
@@ -57,7 +57,7 @@ describe 'OSPREY VALIDATIONS - FORM PARAMETER - TYPE - DATE', =>
     # Arrange
     resource = @resources['/date']
     req = new Request 'POST', '/api/date'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/x-www-form-urlencoded'
     req.addBodyParameter 'param', 'Sun, 06 Nov 1994 08:49:37 GMT'

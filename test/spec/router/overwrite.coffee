@@ -18,7 +18,7 @@ describe 'OSPREY ROUTER - OVERWRITE', =>
   it 'Should be able to overwrite a valid resource', () =>
     # Arrange
     context = new Express
-    router = new OspreyRouter '/api', context, {}, @resources, @uriTemplateReader, new Logger
+    router = new OspreyRouter '/api', context, {}, @resources, {}, @uriTemplateReader, new Logger
 
     # Act
     router.resolveMethod method: 'get', template: '/resource', handler: () ->
@@ -29,7 +29,7 @@ describe 'OSPREY ROUTER - OVERWRITE', =>
   it 'Should not be able to overwrite a resource which does not exists in the RAML file', () =>
     # Arrange
     context = new Express
-    router = new OspreyRouter '/api', context, {}, @resources, @uriTemplateReader, new Logger
+    router = new OspreyRouter '/api', context, {}, @resources, {}, @uriTemplateReader, new Logger
 
     # Act
     router.resolveMethod method: 'get', template: '/no-existing', handler: null
@@ -40,7 +40,7 @@ describe 'OSPREY ROUTER - OVERWRITE', =>
   it 'Should not fail if a resource does not have method defined', () =>
     # Arrange
     context = new Express
-    router = new OspreyRouter '/api', context, {}, @resources, @uriTemplateReader, new Logger
+    router = new OspreyRouter '/api', context, {}, @resources, {}, @uriTemplateReader, new Logger
 
     # Act
     router.resolveMethod method: 'get', template: '/resource2', handler: null
