@@ -13,16 +13,19 @@ exports.create = (apiPath, context, settings) ->
 
   logger.setLevel settings.logLevel
 
-  parser.loadRaml settings.ramlFile, logger, (wrapper) ->
-    resources = wrapper.getResources()
-    uriTemplateReader = new UriTemplateReader wrapper.getUriTemplates()
+  parser.loadRaml(settings.ramlFile, logger)
+    .then((wrapper) ->
+      resources = wrapper.getResources()
+      uriTemplateReader = new UriTemplateReader wrapper.getUriTemplates()
 
-    osprey.load null, uriTemplateReader, resources
+      osprey.load null, uriTemplateReader, resources
 
-    # Register the console after Osprey has been loaded, since Osprey is
-    # attached asynchronously after RAML is parsed. The first call to any
-    # Express http method will mount the router and we don't want that to
-    # occur until we actually can handle it with Osprey.
-    osprey.registerConsole()
+      # Register the console after Osprey has been loaded, since Osprey is
+      # attached asynchronously after RAML is parsed. The first call to any
+      # Express http method will mount the router and we don't want that to
+      # occur until we actually can handle it with Osprey.
+      osprey.registerConsole()
+    )
+    .done()
 
   osprey

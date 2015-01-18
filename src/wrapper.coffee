@@ -1,4 +1,5 @@
 ramlParser = require 'raml-parser'
+Promise = require 'bluebird'
 
 extend = (dest, sources...) ->
   for source in sources
@@ -85,14 +86,16 @@ clone = (obj) ->
 
   return newInstance
 
-ramlLoader = (filePath, logger, onSuccess, onError) ->
-  ramlParser.loadFile(filePath).then(
-    (data) ->
-      logger.info 'RAML successfully loaded'
-      onSuccess(new ParserWrapper data)
-    ,(error) ->
-      logger.error "Error when parsing RAML. Message: #{error.message}, Line: #{error.problem_mark.line}, Column: #{error.problem_mark.column}"
-      onError(error)
+ramlLoader = (filePath, logger) ->
+  return new Promise((resolve, reject) ->
+    ramlParser.loadFile(filePath).then(
+      (data) ->
+        logger.info 'RAML successfully loaded'
+        resolve(new ParserWrapper data)
+      ,(error) ->
+        logger.error "Error when parsing RAML. Message: #{error.message}, Line: #{error.problem_mark.line}, Column: #{error.problem_mark.column}"
+        reject(error)
+    )
   )
 
 exports.loadRaml = ramlLoader
