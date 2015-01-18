@@ -1,8 +1,10 @@
 (function() {
-  var ParserWrapper, clone, extend, ramlLoader, ramlParser,
+  var ParserWrapper, Promise, clone, extend, ramlLoader, ramlParser,
     __slice = [].slice;
 
   ramlParser = require('raml-parser');
+
+  Promise = require('bluebird');
 
   extend = function() {
     var dest, key, source, sources, value, _i, _len;
@@ -133,13 +135,15 @@
     return newInstance;
   };
 
-  ramlLoader = function(filePath, logger, onSuccess, onError) {
-    return ramlParser.loadFile(filePath).then(function(data) {
-      logger.info('RAML successfully loaded');
-      return onSuccess(new ParserWrapper(data));
-    }, function(error) {
-      logger.error("Error when parsing RAML. Message: " + error.message + ", Line: " + error.problem_mark.line + ", Column: " + error.problem_mark.column);
-      return onError(error);
+  ramlLoader = function(filePath, logger) {
+    return new Promise(function(resolve, reject) {
+      return ramlParser.loadFile(filePath).then(function(data) {
+        logger.info('RAML successfully loaded');
+        return resolve(new ParserWrapper(data));
+      }, function(error) {
+        logger.error("Error when parsing RAML. Message: " + error.message + ", Line: " + error.problem_mark.line + ", Column: " + error.problem_mark.column);
+        return reject(error);
+      });
     });
   };
 
