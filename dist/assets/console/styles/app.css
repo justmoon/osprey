@@ -2662,8 +2662,9 @@ raml-console article#raml-console input.warning,
   border-color: #fbb03b;
   outline: 0;
 }
-raml-console article#raml-console .required,
-#raml-console-loader .required {
+raml-console article#raml-console .required:before,
+#raml-console-loader .required:before {
+  content: "* ";
   color: #fbb03b;
 }
 raml-console article#raml-console input.error,
@@ -4437,6 +4438,11 @@ raml-console article#raml-console #raml-console-api-title,
   float: left;
   font-size: 20px;
   line-height: 1em;
+  margin: 20px;
+}
+raml-console article#raml-console #raml-console-proxy-nav,
+#raml-console-loader #raml-console-proxy-nav {
+  float: right;
   margin: 20px;
 }
 raml-console article#raml-console #raml-console-main-nav,

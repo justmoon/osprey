@@ -290,7 +290,8 @@ RAML.Inspector = (function() {
     },
 
     createBaseUri: function(rootRAML) {
-      var baseUri = rootRAML.baseUri.toString();
+      var baseUri = rootRAML.baseUri.toString().replace(/\/+$/, '');
+
       return new RAML.Client.ParameterizedString(baseUri, rootRAML.baseUriParameters, { parameterValues: {version: rootRAML.version} });
     },
 
@@ -383,14 +384,6 @@ RAML.Inspector = (function() {
     this.requestTokenCredentials = RAML.Client.AuthStrategies.Oauth1.requestTokenCredentials(scheme.settings, signerFactory);
   };
 
-  Oauth1.proxyRequest = function(url) {
-    if (RAML.Settings.proxy) {
-      url = RAML.Settings.proxy + url;
-    }
-
-    return url;
-  };
-
   Oauth1.parseUrlEncodedData = function(data) {
     var result = {};
 
@@ -436,8 +429,7 @@ RAML.Inspector = (function() {
 
   RAML.Client.AuthStrategies.Oauth1.requestTemporaryCredentials = function(settings, signerFactory) {
     return function requestTemporaryCredentials() {
-      var url = RAML.Client.AuthStrategies.Oauth1.proxyRequest(settings.requestTokenUri);
-      var request = RAML.Client.Request.create(url, 'post');
+      var request = RAML.Client.Request.create(settings.requestTokenUri, 'post');
 
       signerFactory().sign(request);
 
@@ -460,8 +452,7 @@ RAML.Inspector = (function() {
 
   RAML.Client.AuthStrategies.Oauth1.requestTokenCredentials = function(settings, signerFactory) {
     return function requestTokenCredentials(temporaryCredentials) {
-      var url = RAML.Client.AuthStrategies.Oauth1.proxyRequest(settings.tokenCredentialsUri);
-      var request = RAML.Client.Request.create(url, 'post');
+      var request = RAML.Client.Request.create(settings.tokenCredentialsUri, 'post');
 
       signerFactory(temporaryCredentials).sign(request);
 
@@ -542,13 +533,6 @@ RAML.Inspector = (function() {
       rfc3986Encode = RAML.Client.AuthStrategies.Oauth1.Signer.rfc3986Encode,
       setRequestHeader = RAML.Client.AuthStrategies.Oauth1.Signer.setRequestHeader;
 
-  function uriWithoutProxy(url) {
-    if (RAML.Settings.proxy) {
-      url = url.replace(RAML.Settings.proxy, '');
-    }
-    return url;
-  }
-
   function generateSignature(params, request, key) {
     params.oauth_signature_method = 'HMAC-SHA1';
     params.oauth_timestamp = Math.floor(Date.now() / 1000);
@@ -572,7 +556,7 @@ RAML.Inspector = (function() {
 
     encodeURI: function(uri) {
       var parser = document.createElement('a');
-      parser.href = uriWithoutProxy(uri);
+      parser.href = uri;
 
       var hostname = '';
       if (parser.protocol === 'https:' && parser.port === 443 || parser.protocol === 'http:' && parser.port === 80) {
@@ -709,12 +693,15 @@ RAML.Inspector = (function() {
   'use strict';
 
   RAML.Client.AuthStrategies.Oauth2.credentialsManager = function(credentials, responseType) {
+    credentials.scopes = credentials.scopes || [];
+
     return {
       authorizationUrl : function(baseUrl) {
         return baseUrl +
           '?client_id=' + credentials.clientId +
           '&response_type=' + responseType +
-          '&redirect_uri=' + RAML.Settings.oauth2RedirectUri;
+          '&redirect_uri=' + RAML.Settings.oauth2RedirectUri +
+          '&scope=' + encodeURIComponent(credentials.scopes.join(' '));
       },
 
       accessTokenParameters: function(code) {
@@ -725,6 +712,42 @@ RAML.Inspector = (function() {
           grant_type: 'authorization_code',
           redirect_uri: RAML.Settings.oauth2RedirectUri
         };
+      },
+
+      clientCredentialsParameters: function () {
+        return {
+          client_id: credentials.clientId,
+          client_secret: credentials.clientSecret,
+          grant_type: 'client_credentials',
+          scope: credentials.scopes.join(' ')
+        };
+      },
+
+      resourceOwnerParameters: function () {
+        var params = {
+          username: credentials.username,
+          password: credentials.password,
+          grant_type: 'password',
+          scope: credentials.scopes.join(' ')
+        };
+
+        if (!credentials.clientSecret) {
+          params.client_id = credentials.clientId;
+        }
+
+        return params;
+      },
+
+      resourceOwnerHeaders: function () {
+        if (!credentials.clientSecret) {
+          return {};
+        }
+
+        var authorization = btoa(credentials.clientId + ':' + credentials.clientSecret);
+
+        return {
+          'Authorization': 'Bearer ' + authorization
+        };
       }
     };
   };
@@ -733,27 +756,26 @@ RAML.Inspector = (function() {
 (function() {
   'use strict';
 
-  var GRANTS = [ 'code', 'token' ], IMPLICIT_GRANT = 'token';
   var Oauth2 = RAML.Client.AuthStrategies.Oauth2;
 
-  function grantTypeFrom(settings) {
-    var authorizationGrants = settings.authorizationGrants || [];
-    var filtered = authorizationGrants.filter(function(grant) { return grant === IMPLICIT_GRANT; });
-    var specifiedGrant = filtered[0] || authorizationGrants[0];
-
-    if (!GRANTS.some(function(grant) { return grant === specifiedGrant; })) {
-      throw new Error('Unknown grant type: ' + specifiedGrant);
-    }
-
-    return specifiedGrant;
-  }
+  var grants = {
+    code: true,
+    token: true,
+    owner: true,
+    credentials: true
+  };
 
   var Grant = {
     create: function(settings, credentials) {
-      var type = grantTypeFrom(settings);
+      var type = credentials.grantType.type;
       var credentialsManager = Oauth2.credentialsManager(credentials, type);
 
+      if (!grants[type]) {
+        throw new Error('Unknown grant type: ' + type);
+      }
+
       var className = type.charAt(0).toUpperCase() + type.slice(1);
+
       return new this[className](settings, credentialsManager);
     }
   };
@@ -779,20 +801,34 @@ RAML.Inspector = (function() {
     return Oauth2.requestAuthorization(this.settings, this.credentialsManager);
   };
 
+  Grant.Owner = function(settings, credentialsManager) {
+    this.settings = settings;
+    this.credentialsManager = credentialsManager;
+  };
+
+  Grant.Owner.prototype.request = function() {
+    var requestToken = Oauth2.requestOwnerToken(this.settings, this.credentialsManager);
+
+    return requestToken();
+  };
+
+  Grant.Credentials = function(settings, credentialsManager) {
+    this.settings = settings;
+    this.credentialsManager = credentialsManager;
+  };
+
+  Grant.Credentials.prototype.request = function() {
+    var requestToken = Oauth2.requestCredentialsToken(this.settings, this.credentialsManager);
+
+    return requestToken();
+  };
+
   Oauth2.Grant = Grant;
 })();
 
 (function() {
   /* jshint camelcase: false */
   'use strict';
-
-  function proxyRequest(url) {
-    if (RAML.Settings.proxy) {
-      url = RAML.Settings.proxy + url;
-    }
-
-    return url;
-  }
 
   function accessTokenFromObject(data) {
     return data.access_token;
@@ -810,24 +846,44 @@ RAML.Inspector = (function() {
     return undefined;
   }
 
+  function extract(data) {
+    var method = accessTokenFromString;
+
+    if (typeof data === 'object') {
+      method = accessTokenFromObject;
+    }
+
+    return method(data);
+  }
+
   RAML.Client.AuthStrategies.Oauth2.requestAccessToken = function(settings, credentialsManager) {
     return function(code) {
-      var url = proxyRequest(settings.accessTokenUri);
+      var request = RAML.Client.Request.create(settings.accessTokenUri, 'post');
 
-      var requestOptions = {
-        url: url,
-        type: 'post',
-        data: credentialsManager.accessTokenParameters(code)
-      };
+      request.data(credentialsManager.accessTokenParameters(code));
 
-      return $.ajax(requestOptions).then(function(data) {
-        var extract = accessTokenFromString;
-        if (typeof data === 'object') {
-          extract = accessTokenFromObject;
-        }
+      return $.ajax(request.toOptions()).then(extract);
+    };
+  };
 
-        return extract(data);
-      });
+  RAML.Client.AuthStrategies.Oauth2.requestCredentialsToken = function(settings, credentialsManager) {
+    return function() {
+      var request = RAML.Client.Request.create(settings.accessTokenUri, 'post');
+
+      request.data(credentialsManager.clientCredentialsParameters());
+
+      return $.ajax(request.toOptions()).then(extract);
+    };
+  };
+
+  RAML.Client.AuthStrategies.Oauth2.requestOwnerToken = function(settings, credentialsManager) {
+    return function() {
+      var request = RAML.Client.Request.create(settings.accessTokenUri, 'post');
+
+      request.headers(credentialsManager.resourceOwnerHeaders());
+      request.data(credentialsManager.resourceOwnerParameters());
+
+      return $.ajax(request.toOptions()).then(extract);
     };
   };
 })();
@@ -1000,6 +1056,7 @@ RAML.Inspector = (function() {
       if (name.toLowerCase() === CONTENT_TYPE) {
         if (value === FORM_DATA) {
           isMultipartRequest = true;
+          options.contentType = false;
           return;
         } else {
           isMultipartRequest = false;
@@ -1013,7 +1070,6 @@ RAML.Inspector = (function() {
     this.headers = function(headers) {
       options.headers = {};
       isMultipartRequest = false;
-      options.contentType = false;
 
       for (var name in headers) {
         this.header(name, headers[name]);
@@ -1021,8 +1077,9 @@ RAML.Inspector = (function() {
     };
 
     this.toOptions = function() {
-      var o = RAML.Utils.clone(options);
+      var o = RAML.Utils.copy(options);
       o.traditional = true;
+
       if (rawData) {
         if (isMultipartRequest) {
           var data = new FormData();
@@ -1044,9 +1101,14 @@ RAML.Inspector = (function() {
           o.data = rawData;
         }
       }
+
       if (!RAML.Utils.isEmpty(queryParams)) {
         var separator = (options.url.match('\\?') ? '&' : '?');
         o.url = options.url + separator + $.param(queryParams, true);
+      }
+
+      if (!RAML.Services.Config.config.disableProxy && RAML.Settings.proxy) {
+        o.url = RAML.Settings.proxy + o.url;
       }
 
       return o;
@@ -1055,10 +1117,7 @@ RAML.Inspector = (function() {
 
   RAML.Client.Request = {
     create: function(url, method) {
-      var request = {};
-      RequestDsl.call(request, { url: url, type: method, contentType: false });
-
-      return request;
+      return new RequestDsl({ url: url, type: method });
     }
   };
 })();
@@ -1364,6 +1423,8 @@ RAML.Inspector = (function() {
     }
 
     this.keychain = {};
+    this.config   = RAML.Services.Config.config;
+    this.settings = RAML.Settings;
   };
 
   controller.prototype.gotoView = function(view) {
@@ -1597,9 +1658,6 @@ RAML.Inspector = (function() {
       return;
     }
 
-    if (RAML.Settings.proxy) {
-      url = RAML.Settings.proxy + url;
-    }
     var request = RAML.Client.Request.create(url, this.httpMethod);
 
     if (!RAML.Utils.isEmpty(this.context.queryParameters.data())) {
@@ -2377,11 +2435,57 @@ RAML.Inspector = (function() {
 
 (function() {
   RAML.Directives.oauth2 = function() {
+
+    var GRANT_TYPES = [
+      { name: 'Implicit', type: 'token' },
+      { name: 'Authorization Code', type: 'code' },
+      { name: 'Client Credentials', type: 'credentials' },
+      { name: 'Resource Owner Password Credentials', type: 'owner' }
+    ];
+
+    var controller = function($scope) {
+      var scopes              = $scope.scheme.settings.scopes || [];
+      var authorizationGrants = $scope.scheme.settings.authorizationGrants;
+
+      $scope.grantTypes = GRANT_TYPES.filter(function (grant) {
+        return authorizationGrants.indexOf(grant.type) > -1;
+      });
+
+      $scope.credentials = {
+        clientId: '',
+        clientSecret: '',
+        username: '',
+        password: '',
+        scopes: scopes.slice(),
+        grantType: $scope.grantTypes[0]
+      };
+
+      $scope.toggleScope = function (scope) {
+        var index = $scope.credentials.scopes.indexOf(scope);
+
+        if (index === -1) {
+          $scope.credentials.scopes.push(scope);
+        } else {
+          $scope.credentials.scopes.splice(index, 1);
+        }
+      };
+
+      $scope.scopes = scopes;
+
+      $scope.$watch('credentials.grantType.type', function (type) {
+        $scope.hasClientSecret      = type !== 'token';
+        $scope.hasOwnerCredentials  = type === 'owner';
+        $scope.requiresClientSecret = $scope.hasClientSecret && type !== 'owner';
+      });
+    };
+
     return {
       restrict: 'E',
       templateUrl: 'views/oauth2.tmpl.html',
       replace: true,
+      controller: controller,
       scope: {
+        scheme: '=',
         credentials: '='
       }
     };
@@ -3094,6 +3198,93 @@ RAML.Filters = {};
   RAML.Services = {};
 })();
 
+(function () {
+  'use strict';
+
+  /**
+   * Store configuration in local storage under the current key.
+   *
+   * @type {String}
+   */
+  var STORAGE_KEY = 'raml-console-config';
+
+  /**
+   * This is extremely hacky but done because the entire app avoids using
+   * the dependency injection in angular.
+   *
+   * @type {Object}
+   */
+  var config = {
+    disableProxy: false
+  };
+
+  /**
+   * Create a persistent configuration instance that works with angular.
+   */
+  RAML.Services.Config = function ($rootScope, $window) {
+    /**
+     * Update the config object when local storage changes.
+     *
+     * @param {Object} e
+     */
+    function handleStorage(e) {
+      if (e.key !== STORAGE_KEY) {
+        return;
+      }
+
+      // Update the config with the updated storage value.
+      try {
+        $scope.$apply(function () {
+          angular.copy(JSON.parse(e.newValue), config);
+        });
+      } catch (e) {}
+    }
+
+    /**
+     * Attempt to get the value out of local storage.
+     *
+     * @return {Object}
+     */
+    function getStorage() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY));
+      } catch (e) {}
+    }
+
+    /**
+     * Attempt to set the value in local storage.
+     *
+     * @param {Object} value
+     */
+    function setStorage(value) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(value));
+        return true;
+      } catch (e) {}
+
+      return false;
+    }
+
+    var $scope = $rootScope.$new();
+    $scope.config = angular.extend(config, getStorage());
+
+    // When the config options change, save into local storage.
+    $scope.$watchCollection('config', setStorage, true);
+
+    // Listen for local storage changes to persist across frames.
+    if ($window.addEventListener) {
+      $window.addEventListener('storage', handleStorage, false);
+    } else {
+      $window.attachEvent('onstorage', handleStorage);
+    }
+
+    return config;
+  };
+
+  // Alias the config for access outside angular.
+  RAML.Services.Config.config = config;
+})();
+
 (function() {
   'use strict';
 
@@ -3192,12 +3383,11 @@ RAML.Filters = {};
   RAML.Settings = RAML.Settings || {};
 
   var location = window.location;
+  var uri      = location.protocol + '//' + location.host + location.pathname.replace(/\/$/, '');
 
-  var uri = location.protocol + '//' + location.host + location.pathname + 'authentication/oauth2.html';
-  RAML.Settings.oauth2RedirectUri = RAML.Settings.oauth2RedirectUri || uri;
-  RAML.Settings.oauth1RedirectUri = RAML.Settings.oauth1RedirectUri || uri.replace(/oauth2\.html$/, 'oauth1.html');
-
-  // RAML.Settings.proxy = RAML.Settings.proxy || '/proxy/';
+  RAML.Settings.proxy = RAML.Settings.proxy || false;
+  RAML.Settings.oauth2RedirectUri = RAML.Settings.oauth2RedirectUri || uri + '/authentication/oauth2.html';
+  RAML.Settings.oauth1RedirectUri = RAML.Settings.oauth1RedirectUri || uri + '/authentication/oauth2.html';
 })();
 
 (function() {
@@ -3285,6 +3475,7 @@ RAML.Filters = {};
 
   module.controller('TryItController', RAML.Controllers.tryIt);
 
+  module.service('ConfigService', RAML.Services.Config);
   module.service('DataStore', RAML.Services.DataStore);
   module.service('ramlParserWrapper', RAML.Services.RAMLParserWrapper);
 
@@ -3513,13 +3704,50 @@ angular.module('ramlConsoleApp').run(['$templateCache', function($templateCache)
   $templateCache.put('views/oauth2.tmpl.html',
     "<fieldset class=\"labelled-inline\" role=\"oauth2\">\n" +
     "  <div class=\"control-group\">\n" +
-    "    <label for=\"clientId\">Client ID</label>\n" +
-    "    <input type=\"text\" name=\"clientId\" ng-model='credentials.clientId'/>\n" +
+    "    <label for=\"grantType\">Grant Type</label>\n" +
+    "    <select\n" +
+    "      name=\"grantType\"\n" +
+    "      ng-model=\"credentials.grantType\"\n" +
+    "      ng-options=\"grant.name for grant in grantTypes\">\n" +
+    "    </select>\n" +
     "  </div>\n" +
     "\n" +
     "  <div class=\"control-group\">\n" +
-    "    <label for=\"clientSecret\">Client Secret</label>\n" +
-    "    <input type=\"password\" name=\"clientSecret\" ng-model='credentials.clientSecret'/>\n" +
+    "    <label for=\"clientId\" class=\"required\">Client ID</label>\n" +
+    "\n" +
+    "    <input type=\"text\" name=\"clientId\" ng-model=\"credentials.clientId\" required>\n" +
+    "  </div>\n" +
+    "\n" +
+    "  <div class=\"control-group\" ng-if=\"hasClientSecret\">\n" +
+    "    <label for=\"clientSecret\" ng-class=\"{ required: requiresClientSecret }\">\n" +
+    "      Client Secret\n" +
+    "    </label>\n" +
+    "\n" +
+    "    <input type=\"password\" name=\"clientSecret\" ng-model=\"credentials.clientSecret\" ng-required=\"requiresClientSecret\">\n" +
+    "  </div>\n" +
+    "\n" +
+    "  <div class=\"control-group\" ng-if=\"hasOwnerCredentials\">\n" +
+    "    <label for=\"username\" class=\"required\">Username</label>\n" +
+    "\n" +
+    "    <input type=\"text\" name=\"username\" ng-model=\"credentials.username\" required>\n" +
+    "  </div>\n" +
+    "\n" +
+    "  <div class=\"control-group\" ng-if=\"hasOwnerCredentials\">\n" +
+    "    <label for=\"password\" class=\"required\">Password</label>\n" +
+    "\n" +
+    "    <input type=\"password\" name=\"password\" ng-model=\"credentials.password\" required>\n" +
+    "  </div>\n" +
+    "\n" +
+    "  <div ng-if=\"!!scopes.length\">\n" +
+    "    <div>Scopes</div>\n" +
+    "\n" +
+    "    <label ng-repeat=\"scope in scopes\">\n" +
+    "      <input\n" +
+    "        type=\"checkbox\"\n" +
+    "        ng-checked=\"credentials.scopes.indexOf(scope) > -1\"\n" +
+    "        ng-click=\"toggleScope(scope)\">\n" +
+    "      {{scope}}\n" +
+    "    </label>\n" +
     "  </div>\n" +
     "</fieldset>\n"
   );
@@ -3550,8 +3778,7 @@ angular.module('ramlConsoleApp').run(['$templateCache', function($templateCache)
     "    <div class=\"parameter-field\" ng-repeat=\"definition in parameter.definitions\" ng-show=\"parameter.isSelected(definition)\">\n" +
     "      <div repeatable=\"definition.repeat\" repeatable-model=\"parameters.values[parameterName]\">\n" +
     "        <div class=\"control-group\">\n" +
-    "          <label for=\"{{parameterName}}\">\n" +
-    "            <span class=\"required\" ng-if=\"definition.required\">*</span>\n" +
+    "          <label for=\"{{parameterName}}\" ng-class=\"{ required: definition.required }\">\n" +
     "            {{definition.displayName}}\n" +
     "          </label>\n" +
     "          <parameter-field name='parameterName' model='repeatableModel[$index]' definition='definition' ></parameter-field>\n" +
@@ -3594,6 +3821,11 @@ angular.module('ramlConsoleApp').run(['$templateCache', function($templateCache)
     "  </div>\n" +
     "\n" +
     "  <header id=\"raml-console-api-title\">{{api.title}}</header>\n" +
+    "\n" +
+    "  <nav id=\"raml-console-proxy-nav\" ng-if=\"ramlConsole.settings.proxy\">\n" +
+    "    <span>API is behind a firewall <a href=\"http://www.mulesoft.org/documentation/display/current/Accessing+Your+API+Behind+a+Firewall\" target=\"_blank\">(?)</a></span>\n" +
+    "    <input type=\"checkbox\" ng-model=\"ramlConsole.config.disableProxy\">\n" +
+    "  </nav>\n" +
     "\n" +
     "  <nav id=\"raml-console-main-nav\" ng-if='ramlConsole.showRootDocumentation()' ng-switch='ramlConsole.view'>\n" +
     "    <a class=\"btn\" ng-switch-when='rootDocumentation' role=\"view-api-reference\" ng-click='ramlConsole.gotoView(\"apiReference\")'>&larr; API Reference</a>\n" +
@@ -3748,9 +3980,9 @@ angular.module('ramlConsoleApp').run(['$templateCache', function($templateCache)
     "      <toggle-item heading=\"Anonymous\"></toggle-item>\n" +
     "      <toggle-item ng-repeat=\"(name, scheme) in schemes\" heading=\"{{name}}\">\n" +
     "        <div ng-switch=\"scheme.type\">\n" +
-    "          <basic-auth ng-switch-when=\"Basic Authentication\" credentials='keychain[name]'></basic-auth>\n" +
-    "          <oauth1 ng-switch-when=\"OAuth 1.0\" credentials='keychain[name]'></oauth1>\n" +
-    "          <oauth2 ng-switch-when=\"OAuth 2.0\" credentials='keychain[name]'></oauth2>\n" +
+    "          <basic-auth ng-switch-when=\"Basic Authentication\" scheme=\"scheme\" credentials=\"keychain[name]\"></basic-auth>\n" +
+    "          <oauth1 ng-switch-when=\"OAuth 1.0\" scheme=\"scheme\" credentials=\"keychain[name]\"></oauth1>\n" +
+    "          <oauth2 ng-switch-when=\"OAuth 2.0\" scheme=\"scheme\" credentials=\"keychain[name]\"></oauth2>\n" +
     "        </div>\n" +
     "      </toggle-item>\n" +
     "    </toggle>\n" +
