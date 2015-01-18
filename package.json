@@ -37,7 +37,7 @@
     "load-grunt-tasks": "0.4.0",
     "mocha": "1.19.0",
     "should": "3.3.1",
-    "grunt-bower-task": "~0.3.4",
+    "grunt-bower-task": "~0.4.0",
     "supertest": "0.12.1",
     "express-xml-bodyparser": "0.0.4",
     "grunt-githooks": "~0.3.1"
