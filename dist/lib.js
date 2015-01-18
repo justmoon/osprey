@@ -21,10 +21,11 @@
     osprey = new Osprey(apiPath, context, settings, logger);
     logger.setLevel(settings.logLevel);
     parser.loadRaml(settings.ramlFile, logger).then(function(wrapper) {
-      var resources, uriTemplateReader;
+      var resources, schemas, uriTemplateReader;
       resources = wrapper.getResources();
+      schemas = wrapper.getSchemas();
       uriTemplateReader = new UriTemplateReader(wrapper.getUriTemplates());
-      osprey.load(null, uriTemplateReader, resources);
+      osprey.load(null, uriTemplateReader, resources, schemas);
       return osprey.registerConsole();
     }).done();
     return osprey;

@@ -21,12 +21,13 @@
   OspreyRouter = (function(_super) {
     __extends(OspreyRouter, _super);
 
-    function OspreyRouter(apiPath, context, settings, resources, uriTemplateReader, logger) {
+    function OspreyRouter(apiPath, context, settings, resources, schemas, uriTemplateReader, logger) {
       var handler, _i, _len, _ref;
       this.apiPath = apiPath;
       this.context = context;
       this.settings = settings;
       this.resources = resources;
+      this.schemas = schemas;
       this.uriTemplateReader = uriTemplateReader;
       this.logger = logger;
       this.resolveMethod = __bind(this.resolveMethod, this);

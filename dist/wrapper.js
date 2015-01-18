@@ -23,7 +23,9 @@
     function ParserWrapper(data) {
       this.raml = data;
       this.resources = {};
+      this.schemas = {};
       this._generateResources();
+      this._generateSchemas();
     }
 
     ParserWrapper.prototype.getResources = function() {
@@ -54,6 +56,10 @@
         resourceList.push(resourceCopy);
       }
       return resourceList;
+    };
+
+    ParserWrapper.prototype.getSchemas = function() {
+      return this.schemas;
     };
 
     ParserWrapper.prototype.getProtocols = function() {
@@ -98,6 +104,28 @@
       resourceMap[uriKey] = clone(resource);
       delete resourceMap[uriKey].relativeUri;
       return (_ref1 = resourceMap[uriKey]) != null ? delete _ref1.resources : void 0;
+    };
+
+    ParserWrapper.prototype._generateSchemas = function() {
+      var schema, _i, _len, _ref, _results;
+      if (this.raml.schemas != null) {
+        _ref = this.raml.schemas;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          schema = _ref[_i];
+          _results.push(this._processSchema(schema, this.schemas));
+        }
+        return _results;
+      }
+    };
+
+    ParserWrapper.prototype._processSchema = function(schema, schemaMap) {
+      var schemaId, _results;
+      _results = [];
+      for (schemaId in schema) {
+        _results.push(schemaMap[schemaId] = schema[schemaId]);
+      }
+      return _results;
     };
 
     return ParserWrapper;

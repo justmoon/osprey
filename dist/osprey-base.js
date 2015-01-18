@@ -34,12 +34,12 @@
       }
     };
 
-    OspreyBase.prototype.registerMiddlewares = function(middlewares, apiPath, context, settings, resources, uriTemplateReader, logger) {
+    OspreyBase.prototype.registerMiddlewares = function(middlewares, apiPath, context, settings, resources, schemas, uriTemplateReader, logger) {
       var middleware, temp, _i, _len, _results;
       _results = [];
       for (_i = 0, _len = middlewares.length; _i < _len; _i++) {
         middleware = middlewares[_i];
-        temp = new middleware(apiPath, context, settings, resources, uriTemplateReader, logger);
+        temp = new middleware(apiPath, context, settings, resources, schemas, uriTemplateReader, logger);
         _results.push(this.context.use(temp.exec));
       }
       return _results;

@@ -3,11 +3,12 @@
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   DefaultParameters = (function() {
-    function DefaultParameters(apiPath, context, settings, resources, uriTemplateReader, logger) {
+    function DefaultParameters(apiPath, context, settings, resources, schemas, uriTemplateReader, logger) {
       this.apiPath = apiPath;
       this.context = context;
       this.settings = settings;
       this.resources = resources;
+      this.schemas = schemas;
       this.uriTemplateReader = uriTemplateReader;
       this.logger = logger;
       this.checkFormParameters = __bind(this.checkFormParameters, this);

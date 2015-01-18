@@ -33,7 +33,7 @@
       return Osprey.__super__.constructor.apply(this, arguments);
     }
 
-    Osprey.prototype.register = function(uriTemplateReader, resources) {
+    Osprey.prototype.register = function(uriTemplateReader, resources, schemas) {
       var middlewares;
       middlewares = [];
       middlewares.push(DefaultParameters);
@@ -42,7 +42,7 @@
       }
       middlewares.push(OspreyRouter);
       middlewares.push(ErrorHandler);
-      return this.registerMiddlewares(middlewares, this.apiPath, this.context, this.settings, resources, uriTemplateReader, this.logger);
+      return this.registerMiddlewares(middlewares, this.apiPath, this.context, this.settings, resources, schemas, uriTemplateReader, this.logger);
     };
 
     Osprey.prototype.registerConsole = function() {
@@ -88,12 +88,12 @@
       };
     };
 
-    Osprey.prototype.load = function(err, uriTemplateReader, resources) {
+    Osprey.prototype.load = function(err, uriTemplateReader, resources, schemas) {
       if (err == null) {
         if ((this.apiDescriptor != null) && typeof this.apiDescriptor === 'function') {
           this.apiDescriptor(this, this.context);
         }
-        return this.register(uriTemplateReader, resources);
+        return this.register(uriTemplateReader, resources, schemas);
       }
     };
 

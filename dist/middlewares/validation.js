@@ -19,11 +19,12 @@
   Validators = require('./validators');
 
   Validation = (function() {
-    function Validation(apiPath, context, settings, resources, uriTemplateReader, logger) {
+    function Validation(apiPath, context, settings, resources, schemas, uriTemplateReader, logger) {
       this.apiPath = apiPath;
       this.context = context;
       this.settings = settings;
       this.resources = resources;
+      this.schemas = schemas;
       this.uriTemplateReader = uriTemplateReader;
       this.logger = logger;
       this.isValid = __bind(this.isValid, this);
@@ -90,6 +91,7 @@
       var contentType, schemaValidator, xml, xsd, _ref, _ref1, _ref2;
       if (method.body != null) {
         contentType = method.body[req != null ? (_ref = req.headers) != null ? (_ref1 = _ref['content-type']) != null ? (_ref2 = _ref1.split(/;/)) != null ? _ref2[0] : void 0 : void 0 : void 0 : void 0];
+        console.log(contentType);
         if ((contentType != null ? contentType.schema : void 0) != null) {
           if (this.isJson(req)) {
             schemaValidator = new SchemaValidator();
