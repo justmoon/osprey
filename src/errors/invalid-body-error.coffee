@@ -1,5 +1,6 @@
 class InvalidBodyError extends Error
-  constructor: (@context) ->
-    super
+  constructor: (@message, @validationErrors) ->
+    Error.captureStackTrace(@,@)
+    @name = "InvalidBodyError"
 
 module.exports = InvalidBodyError

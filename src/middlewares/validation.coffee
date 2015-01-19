@@ -43,8 +43,7 @@ class Validation
 
       @validateFormParams method, req
 
-      unless @validateSchema method, req
-        throw new InvalidBodyError {}
+      @validateSchema method, req
 
   isForm: (req) ->
     req.headers['content-type'] in ['application/x-www-form-urlencoded', 'multipart/form-data']
@@ -63,13 +62,24 @@ class Validation
 
       if contentType?.schema?
         if @isJson req
-          return not (@jsonSchemaValidator.validate req.body, JSON.parse contentType.schema).errors.length
+          validation = @jsonSchemaValidator.validate req.body, JSON.parse contentType.schema
+          if validation.errors.length
+            errors = validation.errors.map (error) ->
+              message: error.property + ' ' + error.message
+
+            throw new InvalidBodyError "Invalid JSON", errors
         else if @isXml req
           if req.rawBody?
             xml = libxml.parseXmlString req.rawBody
             xsd = libxml.parseXmlString contentType.schema
-            return xml.validate(xsd)
-    true
+            unless xml.validate(xsd)
+              errors = xml.validationErrors.map (error) ->
+                message: error.message,
+                level: error.level,
+                line: error.line,
+                column: error.column
+
+              throw new InvalidBodyError "Invalid XML", errors
 
   methodInfoFor: (resource, httpMethod) ->
     if resource.methods?

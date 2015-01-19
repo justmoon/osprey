@@ -18,7 +18,11 @@ module.exports =
     res.send 400
 
   InvalidBodyError: (err, req, res) ->
-    res.send 400
+    res.status 400
+    res.json error:
+      id: "Invalid Body",
+      message: err.message,
+      validationErrors: err.validationErrors
 
   Error: (err, req, res) ->
     res.send 500
