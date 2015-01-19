@@ -72,9 +72,7 @@
         this.validateQueryParams(method, req);
         this.validateHeaders(method, req);
         this.validateFormParams(method, req);
-        if (!this.validateSchema(method, req)) {
-          throw new InvalidBodyError({});
-        }
+        return this.validateSchema(method, req);
       }
     };
 
@@ -97,22 +95,39 @@
     };
 
     Validation.prototype.validateSchema = function(method, req) {
-      var contentType, xml, xsd, _ref, _ref1, _ref2;
+      var contentType, errors, validation, xml, xsd, _ref, _ref1, _ref2;
       if (method.body != null) {
         contentType = method.body[req != null ? (_ref = req.headers) != null ? (_ref1 = _ref['content-type']) != null ? (_ref2 = _ref1.split(/;/)) != null ? _ref2[0] : void 0 : void 0 : void 0 : void 0];
         if ((contentType != null ? contentType.schema : void 0) != null) {
           if (this.isJson(req)) {
-            return !(this.jsonSchemaValidator.validate(req.body, JSON.parse(contentType.schema))).errors.length;
+            validation = this.jsonSchemaValidator.validate(req.body, JSON.parse(contentType.schema));
+            if (validation.errors.length) {
+              errors = validation.errors.map(function(error) {
+                return {
+                  message: error.property + ' ' + error.message
+                };
+              });
+              throw new InvalidBodyError("Invalid JSON", errors);
+            }
           } else if (this.isXml(req)) {
             if (req.rawBody != null) {
               xml = libxml.parseXmlString(req.rawBody);
               xsd = libxml.parseXmlString(contentType.schema);
-              return xml.validate(xsd);
+              if (!xml.validate(xsd)) {
+                errors = xml.validationErrors.map(function(error) {
+                  return {
+                    message: error.message,
+                    level: error.level,
+                    line: error.line,
+                    column: error.column
+                  };
+                });
+                throw new InvalidBodyError("Invalid XML", errors);
+              }
             }
           }
         }
       }
-      return true;
     };
 
     Validation.prototype.methodInfoFor = function(resource, httpMethod) {

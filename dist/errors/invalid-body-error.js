@@ -6,9 +6,11 @@
   InvalidBodyError = (function(_super) {
     __extends(InvalidBodyError, _super);
 
-    function InvalidBodyError(context) {
-      this.context = context;
-      InvalidBodyError.__super__.constructor.apply(this, arguments);
+    function InvalidBodyError(message, validationErrors) {
+      this.message = message;
+      this.validationErrors = validationErrors;
+      Error.captureStackTrace(this, this);
+      this.name = "InvalidBodyError";
     }
 
     return InvalidBodyError;

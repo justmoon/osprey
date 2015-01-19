@@ -19,7 +19,14 @@
       return res.send(400);
     },
     InvalidBodyError: function(err, req, res) {
-      return res.send(400);
+      res.status(400);
+      return res.json({
+        error: {
+          id: "Invalid Body",
+          message: err.message,
+          validationErrors: err.validationErrors
+        }
+      });
     },
     Error: function(err, req, res) {
       return res.send(500);
