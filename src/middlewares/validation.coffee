@@ -10,6 +10,10 @@ Validators = require './validators'
 class Validation
   constructor: (@apiPath, @context, @settings, @resources, @schemas, @uriTemplateReader, @logger) ->
     @logger.info 'Osprey::Validations has been initialized successfully'
+    @jsonSchemaValidator = new SchemaValidator()
+    for schemaId, schema of @schemas
+      if schema[0] == '{'
+        @jsonSchemaValidator.addSchema JSON.parse(schema), '/'+schemaId
 
   exec: (req, res, next) =>
     regex = new RegExp "^\\" + @apiPath + "(.*)"
@@ -57,12 +61,9 @@ class Validation
     if method.body?
       contentType = method.body[req?.headers?['content-type']?.split(/;/)?[0]]
 
-      console.log contentType
-
       if contentType?.schema?
         if @isJson req
-          schemaValidator = new SchemaValidator()
-          return not (schemaValidator.validate req.body, JSON.parse contentType.schema).errors.length
+          return not (@jsonSchemaValidator.validate req.body, JSON.parse contentType.schema).errors.length
         else if @isXml req
           if req.rawBody?
             xml = libxml.parseXmlString req.rawBody
