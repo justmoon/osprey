@@ -20,6 +20,7 @@
 
   Validation = (function() {
     function Validation(apiPath, context, settings, resources, schemas, uriTemplateReader, logger) {
+      var schema, schemaId, _ref;
       this.apiPath = apiPath;
       this.context = context;
       this.settings = settings;
@@ -36,6 +37,14 @@
       this.validateRequest = __bind(this.validateRequest, this);
       this.exec = __bind(this.exec, this);
       this.logger.info('Osprey::Validations has been initialized successfully');
+      this.jsonSchemaValidator = new SchemaValidator();
+      _ref = this.schemas;
+      for (schemaId in _ref) {
+        schema = _ref[schemaId];
+        if (schema[0] === '{') {
+          this.jsonSchemaValidator.addSchema(JSON.parse(schema), '/' + schemaId);
+        }
+      }
     }
 
     Validation.prototype.exec = function(req, res, next) {
@@ -88,14 +97,12 @@
     };
 
     Validation.prototype.validateSchema = function(method, req) {
-      var contentType, schemaValidator, xml, xsd, _ref, _ref1, _ref2;
+      var contentType, xml, xsd, _ref, _ref1, _ref2;
       if (method.body != null) {
         contentType = method.body[req != null ? (_ref = req.headers) != null ? (_ref1 = _ref['content-type']) != null ? (_ref2 = _ref1.split(/;/)) != null ? _ref2[0] : void 0 : void 0 : void 0 : void 0];
-        console.log(contentType);
         if ((contentType != null ? contentType.schema : void 0) != null) {
           if (this.isJson(req)) {
-            schemaValidator = new SchemaValidator();
-            return !(schemaValidator.validate(req.body, JSON.parse(contentType.schema))).errors.length;
+            return !(this.jsonSchemaValidator.validate(req.body, JSON.parse(contentType.schema))).errors.length;
           } else if (this.isXml(req)) {
             if (req.rawBody != null) {
               xml = libxml.parseXmlString(req.rawBody);
