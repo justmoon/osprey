@@ -67,8 +67,11 @@ class OspreyRouter extends RamlHelper
     resourceExists = @resources[config.template]?.methods?.filter (info) -> info.method == config.method
     if resourceExists? and resourceExists.length > 0
       if config.handler
-        @logger.debug "Overwritten resource - #{config.method.toUpperCase()} #{config.template}"
-        @methodHandlers[config.method].resolve config.template, config.handler
+        if typeof config.handler is 'function'
+          @logger.debug "Overwritten resource - #{config.method.toUpperCase()} #{config.template}"
+          @methodHandlers[config.method].resolve config.template, config.handler
+        else
+          @logger.error "Resource handler is not a function - #{config.method.toUpperCase()} #{config.template}"
       else
         @logger.error "Resource to overwrite does not have handlers defined - #{config.method.toUpperCase()} #{config.template}"
     else
