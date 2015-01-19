@@ -3,6 +3,9 @@
 title: validations-json-schema
 version: 1.0
 baseUri: http://localhost:3000/api
+schemas:
+  - byref: !include validations.json-schema.ref.json
+    byname: !include validations.json-schema.external.json
 /resources:
   post:
     body:
@@ -16,8 +19,17 @@ baseUri: http://localhost:3000/api
                 "maxLength": 3,
                 "minLength": 3,
                 "type": "string"
+              },
+              "foo": {
+                "$ref": "byref"
               }
             },
             "type": "object",
-            "name": "resource"
+            "name": "resource",
+            "required": [ "id", "foo" ]
           }
+/external-resources:
+  post:
+    body:
+      application/json:
+        schema: byname

@@ -10,6 +10,7 @@ describe 'OSPREY VALIDATIONS - JSON SCHEMA', =>
     parser.loadRaml("./test/assets/validations.json-schema.raml", new Logger)
     .then (wrapper) =>
       @resources = wrapper.getResources()
+      @schemas = wrapper.getSchemas()
       templates = wrapper.getUriTemplates()
       @uriTemplateReader = new UriTemplateReader templates
 
@@ -17,10 +18,10 @@ describe 'OSPREY VALIDATIONS - JSON SCHEMA', =>
     # Arrange
     resource = @resources['/resources']
     req = new Request 'POST', '/api/resources'
-    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, @schemas, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/json'
-    req.addBody { id: 'aaa' }
+    req.addBody { id: 'aaa', foo: "bar" }
 
     # Assert
     ( ->
@@ -31,10 +32,10 @@ describe 'OSPREY VALIDATIONS - JSON SCHEMA', =>
     # Arrange
     resource = @resources['/resources']
     req = new Request 'POST', '/api/resources'
-    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, @schemas, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/test+json'
-    req.addBody { id: 'aaa' }
+    req.addBody { id: 'aaa', foo: "bar" }
 
     # Assert
     ( ->
@@ -45,7 +46,7 @@ describe 'OSPREY VALIDATIONS - JSON SCHEMA', =>
     # Arrange
     resource = @resources['/resources']
     req = new Request 'POST', '/api/resources'
-    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, @schemas, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/test+json'
     req.addBody {}
@@ -59,10 +60,24 @@ describe 'OSPREY VALIDATIONS - JSON SCHEMA', =>
     # Arrange
     resource = @resources['/resources']
     req = new Request 'POST', '/api/resources'
-    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, @schemas, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/json'
     req.addBody { id: 'a' }
+
+    # Assert
+    ( ->
+      validation.validateRequest resource, req
+    ).should.throw()
+
+  it 'Should throw an exception if request body does not match ref\'d schema', () =>
+    # Arrange
+    resource = @resources['/resources']
+    req = new Request 'POST', '/api/resources'
+    validation = new Validation '/api', {}, {}, @resources, @schemas, @uriTemplateReader, new Logger
+
+    req.addHeader 'content-type', 'application/json'
+    req.addBody { id: 'a', foo: "derp" }
 
     # Assert
     ( ->
@@ -73,7 +88,7 @@ describe 'OSPREY VALIDATIONS - JSON SCHEMA', =>
     # Arrange
     resource = @resources['/resources']
     req = new Request 'POST', '/api/resources'
-    validation = new Validation '/api', {}, {}, @resources, {}, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, @schemas, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'text/plain'
 
@@ -81,3 +96,31 @@ describe 'OSPREY VALIDATIONS - JSON SCHEMA', =>
     ( ->
       validation.validateRequest resource, req
     ).should.not.throw()
+
+  it 'Should be correctly validated against external schema if request body is ok', () =>
+    # Arrange
+    resource = @resources['/external-resources']
+    req = new Request 'POST', '/api/external-resources'
+    validation = new Validation '/api', {}, {}, @resources, @schemas, @uriTemplateReader, new Logger
+
+    req.addHeader 'content-type', 'application/json'
+    req.addBody { "example": "foo" }
+
+    # Assert
+    ( ->
+      validation.validateRequest resource, req
+    ).should.not.throw()
+
+  it 'Should not validate against external schema if field is missing', () =>
+    # Arrange
+    resource = @resources['/external-resources']
+    req = new Request 'POST', '/api/external-resources'
+    validation = new Validation '/api', {}, {}, @resources, @schemas, @uriTemplateReader, new Logger
+
+    req.addHeader 'content-type', 'application/json'
+    req.addBody { "exomple": "foo" }
+
+    # Assert
+    ( ->
+      validation.validateRequest resource, req
+    ).should.throw()
