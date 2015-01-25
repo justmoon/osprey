@@ -1,21 +1,21 @@
 module.exports =
   InvalidAcceptTypeError: (err, req, res) ->
-    res.send 406
+    res.status 406
 
   InvalidContentTypeError: (err, req, res) ->
-    res.send 415
+    res.status 415
 
   InvalidUriParameterError: (err, req, res) ->
-    res.send 400
+    res.status 400
 
   InvalidFormParameterError: (err, req, res) ->
-    res.send 400
+    res.status 400
 
   InvalidQueryParameterError: (err, req, res) ->
-    res.send 400
+    res.status 400
 
   InvalidHeaderError: (err, req, res) ->
-    res.send 400
+    res.status 400
 
   InvalidBodyError: (err, req, res) ->
     res.status 400
@@ -25,4 +25,7 @@ module.exports =
       validationErrors: err.validationErrors
 
   Error: (err, req, res) ->
-    res.send 500
+    res.status 500
+    res.json error:
+      id: "Internal Error",
+      message: err.message
